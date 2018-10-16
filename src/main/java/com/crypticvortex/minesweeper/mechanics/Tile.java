@@ -2,35 +2,41 @@ package com.crypticvortex.minesweeper.mechanics;
 
 import org.omg.CORBA.DynAnyPackage.Invalid;
 
+import javax.swing.*;
+
 /**
  * Individual tile data.
  */
-public class Tile {
+public class Tile extends JButton {
     private boolean isMine;
-    private boolean isDiscorvered;
+    private boolean isDiscovered;
     private int index;
     private FlagType flagType; //INVALID if no flag is present.
 
     public Tile(Tile tile){
-        this(tile.getIndex(), tile.getIsMine(), tile.getFlagType());
-        isDiscorvered = tile.getIsDiscovered();
+        this(tile.getIndex(), tile.isMine(), tile.getFlagType());
+        isDiscovered = tile.isDiscovered();
     }
 
     public Tile(int index, boolean isMine) {
         this.index = index;
         this.isMine = isMine;
-        this.isDiscorvered = false;
+        this.isDiscovered = false;
         flagType = FlagType.INVALID;
     }
 
-    public Tile(int index, boolean isMine, FlagType type) { // Optional constructor for flags.
+    public Tile(int index, boolean isMine, FlagType type) {
         this(index, isMine);
         this.flagType = type;
     }
 
-    public boolean getIsMine() { return isMine; }
+    public boolean isMine() {
+        return isMine;
+    }
 
-    public boolean getIsDiscovered() { return isDiscorvered; }
+    public boolean isDiscovered() {
+        return isDiscovered;
+    }
 
     public void setFlagType(FlagType flagType) {
         this.flagType = flagType;
@@ -40,13 +46,16 @@ public class Tile {
         return flagType;
     }
 
-    public int getIndex() { return index; }
+    public int getIndex() {
+        return index;
+    }
 
-    public boolean DiscoverTile(){
+    public boolean discoverTile(){
         if(flagType == FlagType.INVALID)
             return false;
 
-        isDiscorvered = true;
+        isDiscovered = true;
         return isMine;
     }
+
 }

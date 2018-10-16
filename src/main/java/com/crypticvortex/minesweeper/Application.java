@@ -3,9 +3,6 @@ package com.crypticvortex.minesweeper;
 import com.crypticvortex.minesweeper.menus.StartScreen;
 
 import javax.swing.*;
-import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 
 public class Application extends JFrame {
     private static final long serialVersionUID = -1L;
@@ -34,20 +31,6 @@ public class Application extends JFrame {
         setSize(400, 400);
         setLocationRelativeTo(null);
         setContentPane(new StartScreen());
-
-        addMouseListener(new MouseAdapter() {
-            public void mouseClicked(MouseEvent e) { // Called after the button has been pressed and released.
-
-            }
-
-            public void mousePressed(MouseEvent e) { // Called when the mouse button is first pressed down.
-
-            }
-
-            public void mouseReleased(MouseEvent e) { // Called when the mouse button is released after being pressed.
-
-            }
-        });
     }
 
     public static void main(String[] args) {
