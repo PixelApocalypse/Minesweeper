@@ -26,10 +26,10 @@ public class Minefield {
     public void populate() {
         ArrayList<Integer> minesCoordonate = getMinesCoordonate();
         for(int i = 0; i < width * height; ++i){
-            tiles[i] = new Tile(i, minesCoordonate.contains(i));
+            tiles[i] = new Tile(minesCoordonate.contains(i));
         }
     }
-// width * y + x
+
     private ArrayList<Integer> getMinesCoordonate(){
         Random random = new Random(this.seed);
         int nbOfMines = Math.round(tiles.length / (MINE_PERCENT + diff.getAmount()));
@@ -60,6 +60,20 @@ public class Minefield {
 
     public Tile getTile(int index){
         return new Tile(tiles[index]);
+    }
+
+    public boolean showTile(int index) {
+        Tile tile = tiles[index];
+
+        if(tile.getFlagType() != FlagType.INVALID)
+            return false;
+
+        if(tile.isMine()){
+            //...
+        }
+
+        //if()
+        return false;
     }
 
 
