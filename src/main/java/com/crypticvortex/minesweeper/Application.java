@@ -3,6 +3,7 @@ package com.crypticvortex.minesweeper;
 import com.crypticvortex.minesweeper.menus.StartScreen;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
