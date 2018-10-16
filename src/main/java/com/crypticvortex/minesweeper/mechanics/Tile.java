@@ -7,7 +7,7 @@ import org.omg.CORBA.DynAnyPackage.Invalid;
  */
 public class Tile {
     private boolean isMine;
-    private boolean isDiscorvered;
+    private boolean isDiscovered;
     private FlagType flagType; //INVALID if no flag is present.
 
     /**
@@ -15,8 +15,8 @@ public class Tile {
      * @param tile Type to copy
      */
     public Tile(Tile tile){
-        this(tile.getIsMine(), tile.getFlagType());
-        isDiscorvered = tile.getIsDiscovered();
+        this(tile.isMine(), tile.getFlagType());
+        isDiscovered = tile.isDiscovered();
     }
 
     /**
@@ -25,7 +25,7 @@ public class Tile {
      */
     public Tile(boolean isMine) {
         this.isMine = isMine;
-        this.isDiscorvered = false;
+        this.isDiscovered = false;
         flagType = FlagType.INVALID;
     }
 
@@ -39,12 +39,12 @@ public class Tile {
         this.flagType = type;
     }
 
-    public boolean getIsMine() { return isMine; }
+    public boolean isMine() { return isMine; }
 
-    public boolean getIsDiscovered() { return isDiscorvered; }
+    public boolean isDiscovered() { return isDiscovered; }
 
     public void setFlagType(FlagType flagType) {
-        if(!isDiscorvered)
+        if(!isDiscovered)
             this.flagType = flagType;
     }
 
@@ -59,7 +59,7 @@ public class Tile {
     public boolean showTile(){
         if(flagType == FlagType.INVALID)
             return false;
-        isDiscorvered = true;
+        isDiscovered = true;
         return isMine;
     }
 }
