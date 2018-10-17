@@ -175,47 +175,43 @@ public class Minefield {
      * @param index index of the tile to look around
      * @return all tiles around the given tile
      */
-    private Tile[] getNearbyTiles(int index){
+    private Tile[] getNearbyTiles(int index) {
         ArrayList<Tile> nearbyTiles = new ArrayList<>();
 
-        if(index - width - 1 >= 0 && (index - width - 1) / width == (index - width) / width)
+        if (index - width - 1 >= 0 && (index - width - 1) / width == (index - width) / width)
             nearbyTiles.add(tiles[index - width - 1]);
-        if(index - width >= 0)
+        if (index - width >= 0)
             nearbyTiles.add(tiles[index - width]);
-        if(index - width + 1 >= 0 && (index - width + 1) / width == (index - width) / width)
+        if (index - width + 1 >= 0 && (index - width + 1) / width == (index - width) / width)
             nearbyTiles.add(tiles[index - width + 1]);
 
-        if(index - 1 >= 0 && (index - 1) / width == index / width)
+        if (index - 1 >= 0 && (index - 1) / width == index / width)
             nearbyTiles.add(tiles[index - 1]);
-        if(index + 1 < tiles.length && (index + 1) / width == index / width)
+        if (index + 1 < tiles.length && (index + 1) / width == index / width)
             nearbyTiles.add(tiles[index + 1]);
 
-        if(index + width - 1 < tiles.length && (index + width - 1) / width == (index + width) / width)
+        if (index + width - 1 < tiles.length && (index + width - 1) / width == (index + width) / width)
             nearbyTiles.add(tiles[index + width - 1]);
-        if(index + width < tiles.length && (index + width) / width == (index + width) / width)
+        if (index + width < tiles.length && (index + width) / width == (index + width) / width)
             nearbyTiles.add(tiles[index + width]);
-        if(index + width + 1 < tiles.length && (index + width + 1) / width == (index + width) / width)
+        if (index + width + 1 < tiles.length && (index + width + 1) / width == (index + width) / width)
             nearbyTiles.add(tiles[index + width + 1]);
 
-        Tile[] optimisedNearbyTiles = nearbyTiles.toArray(new Tile[] {});
+        Tile[] optimisedNearbyTiles = nearbyTiles.toArray(new Tile[]{});
         return optimisedNearbyTiles;
-    }
-
-    public boolean setTileFlagType(int index, FlagType flagType){
-        return tiles[index].setFlagType(flagType);
     }
 
     public void plantFlag(int index) {
         Tile tile = getTile(index);
         if(!tile.isShown()) {
             if (tile.getFlagType() == FlagType.INVALID) {
-                if(setTileFlagType(index, FlagType.RED))
+                if(tile.setFlagType(FlagType.RED))
                     tile.setIcon(MenuIcons.FLAG_RED);
             } else if (tile.getFlagType() == FlagType.RED) {
-                if(setTileFlagType(index, FlagType.QUESTION))
+                if(tile.setFlagType(FlagType.QUESTION))
                     tile.setIcon(MenuIcons.FLAG_QUESTION);
             } else if (tile.getFlagType() == FlagType.QUESTION) {
-                if(setTileFlagType(index, FlagType.INVALID))
+                if(tile.setFlagType(FlagType.INVALID))
                     tile.setIcon(MenuIcons.DEFAULT);
             }
         }

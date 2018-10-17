@@ -13,6 +13,7 @@ import java.awt.*;
  * @author Caraibe8
  */
 public class Tile extends JButton {
+    private int id;
     private boolean isMine;
     private boolean isDiscovered;
     private FlagType flagType; //INVALID if no flag is present.
@@ -22,7 +23,7 @@ public class Tile extends JButton {
      * @param tile Type to copy
      */
     public Tile(Tile tile){
-        this(tile.isMine(), tile.getFlagType());
+        this(tile.getId(), tile.isMine(), tile.getFlagType());
         isDiscovered = tile.isShown();
     }
 
@@ -30,7 +31,8 @@ public class Tile extends JButton {
      * Create a new tile
      * @param isMine if the tile should be considered as a mine
      */
-    public Tile(boolean isMine) {
+    public Tile(int id, boolean isMine) {
+        this.id = id;
         this.isMine = isMine;
         this.isDiscovered = false;
         flagType = FlagType.INVALID;
@@ -47,10 +49,12 @@ public class Tile extends JButton {
      * @param isMine if the tile should be considered as a mine
      * @param type what flag should the tile have
      */
-    public Tile(boolean isMine, FlagType type) {
-        this(isMine);
+    public Tile(int id, boolean isMine, FlagType type) {
+        this(id, isMine);
         this.flagType = type;
     }
+
+    public int getId() { return id; }
 
     public boolean isMine() {
         return isMine;
