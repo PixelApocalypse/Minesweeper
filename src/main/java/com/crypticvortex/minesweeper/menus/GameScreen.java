@@ -2,6 +2,8 @@ package com.crypticvortex.minesweeper.menus;
 
 import com.crypticvortex.minesweeper.mechanics.Minefield;
 import com.crypticvortex.minesweeper.mechanics.Tile;
+import javafx.scene.layout.Border;
+import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 import java.awt.*;
@@ -17,7 +19,9 @@ public class GameScreen extends JPanel {
     private JButton[] tiles;
 
     public GameScreen(Minefield field) {
-        setLayout(new GridLayout(field.getWidth(), field.getHeight(), 0, 0 ));
+        //setLayout(new GridLayout(field.getWidth(), field.getHeight(), 0, 0 ));
+        setLayout(new MigLayout("", "[][]"));
+        setBorder(BorderFactory.createLoweredBevelBorder());
 
         int size = field.getWidth() * field.getHeight();
         tiles = new JButton[size];
@@ -26,12 +30,14 @@ public class GameScreen extends JPanel {
             for (int x = 0; x < field.getWidth(); x++) {
                 int index = field.getWidth() * y + x;
                 boolean isMine = field.getTile(index).isMine();
-                TileButton tile = new TileButton(field.getTile(index), MenuIcons.EMPTY);
-                if(isMine) tile.setBackground(Color.RED); // Testing
+                TileButton tile = new TileButton(field.getTile(index));
                 tile.addActionListener(new TileListener());
-                tile.setSize(50, 50);
+                tile.setSize(16, 16);
                 tiles[Math.min(index, size)] = tile;
-                add(tile);
+                if(x == field.getWidth() - 1)
+                    add(tile, "wrap");
+                else
+                    add(tile);
             }
         }
     }
@@ -39,9 +45,18 @@ public class GameScreen extends JPanel {
     private class TileButton extends JButton {
         private Tile tile;
 
-        public TileButton(Tile tile, ImageIcon icon) {
-            super(icon);
+        public TileButton(Tile tile) {
+            setPreferredSize(new Dimension(16, 16));
+            setMargin(new Insets(0,0, 0, 0));
+            setIcon(MenuIcons.EMPTY);
+            setBorder(BorderFactory.createEmptyBorder());
+            setSelectedIcon((tile.isMine() ? MenuIcons.MINE : MenuIcons.NUMBER_1));
             this.tile = tile;
+        }
+
+        @Override
+        public void setDisabledIcon(Icon icon) {
+            return;
         }
 
         public Tile getTile() {
@@ -53,9 +68,12 @@ public class GameScreen extends JPanel {
         public void actionPerformed(ActionEvent e) {
             TileButton tile = (TileButton) e.getSource();
             boolean isMine = tile.getTile().isMine();
+
             if(isMine) {
-                tile.setBackground(Color.RED);
+                //tile.setBackground(Color.RED);
                 tile.setIcon(MenuIcons.MINE);
+            } else {
+                tile.setIcon(MenuIcons.NUMBER_1);
             }
         }
     }

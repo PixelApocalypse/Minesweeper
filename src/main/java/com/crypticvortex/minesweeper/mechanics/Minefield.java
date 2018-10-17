@@ -11,7 +11,7 @@ public class Minefield {
     private int seed;
     private Tile[] tiles;
     private Difficulty diff;
-    private int width, height;
+    private int width, height, mineCount;
     private final float MINE_PERCENT = 20f;
 
     /**
@@ -37,7 +37,21 @@ public class Minefield {
     }
 
     /**
-     * Generates tiles and put them in the minefields.
+     * Create a new minefield with the given parameters:
+     * @param width Column count.
+     * @param height Row count.
+     * @param mineCount Amount of mines.
+     */
+    public Minefield(int width, int height, int mineCount) {
+        this.width = width;
+        this.height = height;
+        this.mineCount = mineCount;
+        this.diff = Difficulty.CUSTOM;
+        this.tiles = new Tile[width * height];
+    }
+
+    /**
+     * Generates tiles and put them in the minefield.
      */
     public void populate() {
         ArrayList<Integer> minesCoordonate = getMinesIndex();
@@ -53,6 +67,8 @@ public class Minefield {
     private ArrayList<Integer> getMinesIndex(){
         Random random = new Random(this.seed);
         int nbOfMines = Math.round(tiles.length * (MINE_PERCENT + diff.getAmount()) / 100);
+        if(this.mineCount > 0)
+            nbOfMines = mineCount;
         ArrayList<Integer> minesCoordinate = new ArrayList<>(nbOfMines);
 
         for(int i = 0; i < nbOfMines; i++) {

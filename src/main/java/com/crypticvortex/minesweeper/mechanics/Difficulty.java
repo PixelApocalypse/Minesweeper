@@ -7,10 +7,10 @@ package com.crypticvortex.minesweeper.mechanics;
  * @author Caraibe8
  */
 public enum Difficulty {
-    EASY(-10.0f),
-    MEDIUM(-0.0f),
-    HARD(-10.0f),
-    EXPERT(-20.0f);
+    BEGINNER     (-10.0f),
+    INTERMEDIATE (-0.0f),
+    EXPERT       (-10.0f),
+    CUSTOM       (0);
 
     private float amount;
 

@@ -5,6 +5,7 @@ import com.crypticvortex.minesweeper.mechanics.Minefield;
 import com.crypticvortex.minesweeper.menus.GameScreen;
 
 import javax.swing.*;
+import java.awt.*;
 import java.util.logging.Logger;
 
 /**
@@ -38,13 +39,15 @@ public class Application extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(400, 400);
         setLocationRelativeTo(null);
+        setLayout(new FlowLayout(FlowLayout.CENTER, 0, 0));
         setResizable(false);
 
-        field = new Minefield(16, Difficulty.MEDIUM);
+        field = new Minefield(16, Difficulty.INTERMEDIATE);
         field.populate();
 
 //        setContentPane(new StartScreen());
-        setContentPane(new GameScreen(field));
+        add(new GameScreen(field));
+        requestFocus();
         pack();
     }
 
