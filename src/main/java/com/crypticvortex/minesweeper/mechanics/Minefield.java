@@ -36,7 +36,7 @@ public class Minefield {
         ArrayList<Integer> minesCoordonate = new ArrayList<>(nbOfMines);
 
         for(int i = 0; i < nbOfMines; ++i) {
-            int mineLocation = random.nextInt();
+            int mineLocation = random.nextInt(tiles.length);
             if (minesCoordonate.contains(mineLocation)) {
                 --i;
                 continue;
@@ -71,9 +71,36 @@ public class Minefield {
         if(tile.isMine()){
             //...
         }
-
         //if()
         return false;
+    }
+
+    private Tile[] getNearbyTiles(int index){
+        Tile[] nearbyTiles = new Tile[8];
+        int y = index / width;
+
+        if(!(y - width < 0)) {
+            if((index - 1)/width == y - 1)
+                nearbyTiles[0] = tiles[index - width - 1];
+            nearbyTiles[1] = tiles[index - width];
+            if((index + 1)/width == y - 1)
+                nearbyTiles[2] = tiles[index - width + 1];
+        }
+
+        if((index - 1) / width == y)
+            nearbyTiles[3] = tiles[index - 1];
+        if((index + 1) / width == y)
+            nearbyTiles[4] = tiles[index + 1];
+
+        if(!(y + width >= tiles.length)){
+            if((index - 1)/width == y + 1)
+                nearbyTiles[0] = tiles[index + width - 1];
+            nearbyTiles[1] = tiles[index + width];
+            if((index + 1)/width == y + 1)
+                nearbyTiles[2] = tiles[index + width + 1];
+        }
+
+        return nearbyTiles;
     }
 
 
