@@ -31,7 +31,7 @@ public class Application extends JFrame {
      * [ ] Right click to place a flag to mark mine locations.
      * [ ] Right click a flag to cycle it to a Question Mark, Right click that to remove it
      * [ ] Left + Right click on a revealed number with all mines marked to clear remaining adjacent squares.
-     * [ ] Middle mouse to cycle flag color.
+     * [✓] Middle mouse to cycle flag color.
      * [ ] N to create a new game.
      *
      *                       ---- MECHANICS ----
@@ -154,7 +154,6 @@ public class Application extends JFrame {
                 item2.setSelected(false);
                 currentDiff = Difficulty.EXPERT;
             }
-            System.out.println(currentDiff);
         }
     }
 
