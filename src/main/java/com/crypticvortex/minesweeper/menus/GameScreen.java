@@ -27,7 +27,6 @@ public class GameScreen extends JPanel {
     public GameScreen(Minefield field) {
         this.field = field;
         setLayout(new MigLayout(new LC().insets("0").align("center", "center").gridGap("0", "0"), new AC().size("16p")));
-        //setLayout(new MigLayout("grid " + ("" + field.getHeight()) + "" + ("" + field.getWidth()), "[16lp, fill]0", "[15lp, fill]0"));
         setBorder(BorderFactory.createLoweredBevelBorder());
 
         int size = field.getWidth() * field.getHeight();
@@ -68,40 +67,40 @@ public class GameScreen extends JPanel {
         }
 
         public void showTile() {
-            if(tile.isMine()){
-                setIcon(MenuIcons.MINE_PRESSED);
-            }
-            else{
-                int mines = field.getNearbyMines(index);
-                System.out.println("Nearby mines: " + mines);
-                switch(mines) {
-                    case 1: setIcon(MenuIcons.NUMBER_1); break;
-                    case 2: setIcon(MenuIcons.NUMBER_2); break;
-                    case 3: setIcon(MenuIcons.NUMBER_3); break;
-                    case 4: setIcon(MenuIcons.NUMBER_4); break;
-                    case 5: setIcon(MenuIcons.NUMBER_5); break;
-                    case 6: setIcon(MenuIcons.NUMBER_6); break;
-                    case 7: setIcon(MenuIcons.NUMBER_7); break;
-                    case 8: setIcon(MenuIcons.NUMBER_8); break;
-                    default:
-                        setIcon(MenuIcons.EMPTY);
-                        break;
+            if(!tile.isShown()) {
+                if(tile.isMine()) {
+                    setIcon(MenuIcons.MINE_PRESSED);
+                } else {
+                    int mines = field.getNearbyMines(index);
+                    switch(mines) {
+                        case 1: setIcon(MenuIcons.NUMBER_1); break;
+                        case 2: setIcon(MenuIcons.NUMBER_2); break;
+                        case 3: setIcon(MenuIcons.NUMBER_3); break;
+                        case 4: setIcon(MenuIcons.NUMBER_4); break;
+                        case 5: setIcon(MenuIcons.NUMBER_5); break;
+                        case 6: setIcon(MenuIcons.NUMBER_6); break;
+                        case 7: setIcon(MenuIcons.NUMBER_7); break;
+                        case 8: setIcon(MenuIcons.NUMBER_8); break;
+                        default:
+                            setIcon(MenuIcons.EMPTY);
+                            break;
+                    }
+                    tile.show();
                 }
-                tile.show();
             }
         }
 
         public void plantFlag() {
             if(!tile.isShown()) {
                 if (tile.getFlagType() == FlagType.INVALID) {
-                    tile.setFlagType(FlagType.RED);
-                    setIcon(MenuIcons.FLAG_RED);
+                    if(tile.setFlagType(FlagType.RED))
+                        setIcon(MenuIcons.FLAG_RED);
                 } else if (tile.getFlagType() == FlagType.RED) {
-                    tile.setFlagType(FlagType.QUESTION);
-                    setIcon(MenuIcons.FLAG_QUESTION);
+                    if(tile.setFlagType(FlagType.QUESTION))
+                        setIcon(MenuIcons.FLAG_QUESTION);
                 } else if (tile.getFlagType() == FlagType.QUESTION) {
-                    tile.setFlagType(FlagType.INVALID);
-                    setIcon(MenuIcons.DEFAULT);
+                    if(tile.setFlagType(FlagType.INVALID))
+                        setIcon(MenuIcons.DEFAULT);
                 }
             }
         }
@@ -111,45 +110,41 @@ public class GameScreen extends JPanel {
                 if (tile.getFlagType() != FlagType.INVALID) {
                     switch(tile.getFlagType()) {
                         case BLUE:
-                            tile.setFlagType(FlagType.GREEN);
-                            setIcon(MenuIcons.FLAG_GREEN);
+                            if(tile.setFlagType(FlagType.GREEN))
+                                setIcon(MenuIcons.FLAG_GREEN);
                             break;
                         case GREEN:
-                            tile.setFlagType(FlagType.RED);
-                            setIcon(MenuIcons.FLAG_RED);
+                            if(tile.setFlagType(FlagType.RED))
+                                setIcon(MenuIcons.FLAG_RED);
                             break;
                         case RED:
-                            tile.setFlagType(FlagType.PURPLE);
-                            setIcon(MenuIcons.FLAG_PURPLE);
+                            if(tile.setFlagType(FlagType.PURPLE))
+                                setIcon(MenuIcons.FLAG_PURPLE);
                             break;
                         case PURPLE:
-                            tile.setFlagType(FlagType.MAROON);
-                            setIcon(MenuIcons.FLAG_MAROON);
+                            if(tile.setFlagType(FlagType.MAROON))
+                                setIcon(MenuIcons.FLAG_MAROON);
                             break;
                         case MAROON:
-                            tile.setFlagType(FlagType.TURQUOISE);
-                            setIcon(MenuIcons.FLAG_TURQUOISE);
+                            if(tile.setFlagType(FlagType.TURQUOISE))
+                                setIcon(MenuIcons.FLAG_TURQUOISE);
                             break;
                         case TURQUOISE:
-                            tile.setFlagType(FlagType.BLACK);
-                            setIcon(MenuIcons.FLAG_BLACK);
+                            if(tile.setFlagType(FlagType.BLACK))
+                                setIcon(MenuIcons.FLAG_BLACK);
                             break;
                         case BLACK:
-                            tile.setFlagType(FlagType.GRAY);
-                            setIcon(MenuIcons.FLAG_GRAY);
+                            if(tile.setFlagType(FlagType.GRAY))
+                                setIcon(MenuIcons.FLAG_GRAY);
                             break;
                         case GRAY:
-                            tile.setFlagType(FlagType.BLUE);
-                            setIcon(MenuIcons.FLAG_BLUE);
+                            if(tile.setFlagType(FlagType.BLUE))
+                                setIcon(MenuIcons.FLAG_BLUE);
                             break;
                         default: break;
                     }
                 }
             }
-        }
-
-        public Tile getTile() {
-            return tile;
         }
     }
 
