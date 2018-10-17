@@ -10,7 +10,8 @@ public enum Difficulty {
     BEGINNER     (-10.0f),
     INTERMEDIATE (-0.0f),
     EXPERT       (-10.0f),
-    CUSTOM       (0);
+    CUSTOM       (0),
+    EXPERIMENTAL (0); // TODO : Refer to Application design comment
 
     private float amount;
 

@@ -2,7 +2,6 @@ package com.crypticvortex.minesweeper.menus;
 
 import com.crypticvortex.minesweeper.mechanics.Minefield;
 import com.crypticvortex.minesweeper.mechanics.Tile;
-import javafx.scene.layout.Border;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
