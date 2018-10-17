@@ -2,6 +2,7 @@ package com.crypticvortex.minesweeper;
 
 import com.crypticvortex.minesweeper.mechanics.Difficulty;
 import com.crypticvortex.minesweeper.mechanics.Minefield;
+import com.crypticvortex.minesweeper.menus.CounterPanel;
 import com.crypticvortex.minesweeper.menus.GameScreen;
 import net.miginfocom.swing.MigLayout;
 
@@ -21,6 +22,7 @@ import java.util.logging.Logger;
 public class Application extends JFrame {
     private Minefield field;
     private GameScreen screen;
+    private CounterPanel counter;
     private Difficulty currentDiff;
 
     /**
@@ -68,8 +70,12 @@ public class Application extends JFrame {
 
         createMenuBar();
 
-        screen = new GameScreen(field);
-        add(screen);
+        counter = new CounterPanel(getWidth());
+        counter.setSize(getWidth(), 50);
+        add(counter, "wrap");
+
+        screen = new GameScreen(field, counter);
+        add(screen, "center");
         pack();
     }
 
@@ -97,7 +103,7 @@ public class Application extends JFrame {
                 field.populate();
                 setVisible(false);
                 remove(screen);
-                screen = new GameScreen(field);
+                screen = new GameScreen(field, counter);
                 add(screen);
                 setVisible(true);
                 pack();

@@ -19,9 +19,11 @@ import java.awt.event.MouseListener;
  */
 public class GameScreen extends JPanel {
     private Minefield field;
+    private CounterPanel panel;
 
-    public GameScreen(Minefield field) {
+    public GameScreen(Minefield field, CounterPanel panel) {
         this.field = field;
+        this.panel = panel;
         setLayout(new MigLayout(new LC().insets("0").align("center", "center").gridGap("0", "0"), new AC().size("16p")));
         setBorder(BorderFactory.createLoweredBevelBorder());
 
@@ -47,14 +49,18 @@ public class GameScreen extends JPanel {
         public void actionPerformed(ActionEvent e) {
             Tile tile = (Tile) e.getSource();
             field.showTile(tile.getId());
+            if(field.gameWon())
+                JOptionPane.showMessageDialog(null, "Game Won!");
         }
     }
 
     private class TileMouseListener implements MouseListener {
         public void mousePressed(MouseEvent e) {
             Tile tile = (Tile) e.getSource();
-            if(e.getButton() == MouseEvent.BUTTON3)
+            if(e.getButton() == MouseEvent.BUTTON3) {
                 field.plantFlag(tile.getId());
+                panel.updateFace(0);
+            }
             if(e.getButton() == MouseEvent.BUTTON2)
                 tile.cycleColor();
         }

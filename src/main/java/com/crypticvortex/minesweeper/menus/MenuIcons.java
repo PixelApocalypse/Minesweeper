@@ -11,6 +11,7 @@ import javax.swing.*;
  */
 public class MenuIcons {
     // ----- Counter Icons -----
+    // Digits
     public static final ImageIcon COUNTER_0     = getIcon("counter/0.png");
     public static final ImageIcon COUNTER_1     = getIcon("counter/1.png");
     public static final ImageIcon COUNTER_2     = getIcon("counter/2.png");
@@ -22,6 +23,12 @@ public class MenuIcons {
     public static final ImageIcon COUNTER_8     = getIcon("counter/8.png");
     public static final ImageIcon COUNTER_9     = getIcon("counter/9.png");
     public static final ImageIcon COUNTER_DASH  = getIcon("counter/-.png");
+    // Faces
+    public static final ImageIcon FACE_SMILEY       = getIcon("faces/smiley.png");
+    public static final ImageIcon FACE_SMILEY_PRESS = getIcon("faces/smiley_press.png");
+    public static final ImageIcon FACE_COOL         = getIcon("faces/cool.png");
+    public static final ImageIcon FACE_DEAD         = getIcon("faces/dead.png");
+    public static final ImageIcon FACE_NERVOUS      = getIcon("faces/nervous.png");
     // ----- Minefield Icons ----
     // Flags
     public static final ImageIcon FLAG_RED       = getIcon("flags/flag_red.png");
