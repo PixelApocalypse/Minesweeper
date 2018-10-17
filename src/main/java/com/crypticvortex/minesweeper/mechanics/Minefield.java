@@ -58,7 +58,7 @@ public class Minefield {
     }
 
     public Tile getTile(int index){
-        return tiles[index];
+        return new Tile(tiles[index]);
     }
 
     public boolean showTile(int index) {
