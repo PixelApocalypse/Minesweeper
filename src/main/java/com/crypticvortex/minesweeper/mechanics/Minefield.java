@@ -1,6 +1,5 @@
 package com.crypticvortex.minesweeper.mechanics;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -24,26 +23,26 @@ public class Minefield {
     }
 
     public void populate() {
-        ArrayList<Integer> minesCoordonate = getMinesCoordonate();
+        ArrayList<Integer> minesCoordonate = getMinesCoordinate();
         for(int i = 0; i < width * height; ++i){
             tiles[i] = new Tile(minesCoordonate.contains(i));
         }
     }
 
-    private ArrayList<Integer> getMinesCoordonate(){
+    private ArrayList<Integer> getMinesCoordinate(){
         Random random = new Random(this.seed);
         int nbOfMines = Math.round(tiles.length / (MINE_PERCENT + diff.getAmount()));
-        ArrayList<Integer> minesCoordonate = new ArrayList<>(nbOfMines);
+        ArrayList<Integer> minesCoordinate = new ArrayList<>(nbOfMines);
 
         for(int i = 0; i < nbOfMines; ++i) {
             int mineLocation = random.nextInt(tiles.length);
-            if (minesCoordonate.contains(mineLocation)) {
+            if (minesCoordinate.contains(mineLocation)) {
                 --i;
                 continue;
             }
-            minesCoordonate.add(mineLocation);
+            minesCoordinate.add(mineLocation);
         }
-        return minesCoordonate;
+        return minesCoordinate;
     }
 
     public int getWidth() {
