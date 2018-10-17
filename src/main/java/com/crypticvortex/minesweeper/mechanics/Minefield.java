@@ -1,12 +1,14 @@
 package com.crypticvortex.minesweeper.mechanics;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Random;
 
 /**
  * Stores data on mine positions, etc.
  */
 public class Minefield {
+    private static final java.util.Arrays Arrays = ;
     private Tile[] tiles;
     private Difficulty diff;
     private int width, height;
@@ -117,6 +119,20 @@ public class Minefield {
         return true;
     }
 
+    public int[] getNearbyTilesIndex(int index){
+        Tile[] nearbyTiles = getNearbyTiles(index);
+        int[] nearbyTilesIndex = new int[nearbyTiles.length];
+        for(int i = 0; i < nearbyTilesIndex.length; ++i){
+            nearbyTilesIndex[i] = getTileIndex(nearbyTiles[i]);
+        }
+
+        return nearbyTilesIndex;
+    }
+
+    private int getTileIndex(Tile tile) {
+        return Arrays.asList(tiles).indexOf(tile);
+    }
+
     /**
      * Gets and returns all tiles around the tile at the given index.
      * @param index index of the tile to look around
@@ -146,7 +162,10 @@ public class Minefield {
             if((index + 1)/width == y + 1)
                 nearbyTiles.add(tiles[index + width + 1]);
         }
-        Tile[] optimisedNearbyTiles = (Tile[]) nearbyTiles.toArray();
+
+        nearbyTiles.removeAll(null);
+
+        Tile[] optimisedNearbyTiles = nearbyTiles.toArray(new Tile[] {});
 
         return optimisedNearbyTiles;
     }
