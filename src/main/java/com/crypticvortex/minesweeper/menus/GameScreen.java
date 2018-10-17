@@ -1,10 +1,12 @@
 package com.crypticvortex.minesweeper.menus;
 
+import com.crypticvortex.minesweeper.Application;
 import com.crypticvortex.minesweeper.mechanics.Minefield;
 import com.crypticvortex.minesweeper.mechanics.Tile;
 import net.miginfocom.layout.AC;
 import net.miginfocom.layout.LC;
 import net.miginfocom.swing.MigLayout;
+import org.w3c.dom.css.Counter;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -19,11 +21,11 @@ import java.awt.event.MouseListener;
  */
 public class GameScreen extends JPanel {
     private Minefield field;
-    private CounterPanel panel;
+    private CounterPanel counter;
 
-    public GameScreen(Minefield field, CounterPanel panel) {
+    public GameScreen(Minefield field, CounterPanel counter) {
         this.field = field;
-        this.panel = panel;
+        this.counter = counter;
         setLayout(new MigLayout(new LC().insets("0").align("center", "center").gridGap("0", "0"), new AC().size("16p")));
         setBorder(BorderFactory.createLoweredBevelBorder());
 
@@ -49,6 +51,7 @@ public class GameScreen extends JPanel {
         public void actionPerformed(ActionEvent e) {
             Tile tile = (Tile) e.getSource();
             field.showTile(tile.getId());
+            counter.updateFace(0);
             if(field.gameWon())
                 JOptionPane.showMessageDialog(null, "Game Won!");
         }
@@ -59,7 +62,6 @@ public class GameScreen extends JPanel {
             Tile tile = (Tile) e.getSource();
             if(e.getButton() == MouseEvent.BUTTON3) {
                 field.plantFlag(tile.getId());
-                panel.updateFace(0);
             }
             if(e.getButton() == MouseEvent.BUTTON2)
                 tile.cycleColor();

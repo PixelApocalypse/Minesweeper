@@ -71,7 +71,6 @@ public class Application extends JFrame {
         createMenuBar();
 
         counter = new CounterPanel(getWidth());
-        counter.setSize(getWidth(), 50);
         add(counter, "wrap");
 
         screen = new GameScreen(field, counter);

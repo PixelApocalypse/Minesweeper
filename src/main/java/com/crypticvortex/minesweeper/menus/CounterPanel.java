@@ -36,11 +36,11 @@ public class CounterPanel extends JPanel {
         scoreDigits[2] = new JLabel();
 
         for(int m = 0; m < mineDigits.length; m++)
-            add(mineDigits[m], (m == mineDigits.length - 1 ? "gapright 10, cell " + m + " 0" : "cell " + m + " 0"));
+            add(mineDigits[m], (m == mineDigits.length - 1 ? "gapright 20, cell " + m + " 0" : "cell " + m + " 0"));
 
         button = new FaceButton();
         button.setPreferredSize(new Dimension(26, 26));
-        add(button, "cell 4 0, gapright 10");
+        add(button, "w 26!, h 26!, gapright 20");
 
         for(int s = 0; s < scoreDigits.length; s++)
             add(scoreDigits[s], "cell " + (5 + s) + " 0");
@@ -68,18 +68,18 @@ public class CounterPanel extends JPanel {
         public void flashEmotion(int emotion) {
             switch(emotion) {//0 - Nervous, 1 = Dead, 2 = Cool
                 case 0:
-                    setIcon(MenuIcons.FACE_NERVOUS);
+                    button.setIcon(MenuIcons.FACE_NERVOUS);
                     break;
                 case 1:
-                    setIcon(MenuIcons.FACE_DEAD);
+                    button.setIcon(MenuIcons.FACE_DEAD);
                     break;
                 case 2:
-                    setIcon(MenuIcons.FACE_COOL);
+                    button.setIcon(MenuIcons.FACE_COOL);
                     break;
             }
             System.out.println("Hello World!");
-            if(emotion == 0)
-                setIcon(MenuIcons.FACE_SMILEY);
+            /*if(emotion == 0)
+                button.setIcon(MenuIcons.FACE_SMILEY);*/
         }
 
         private class FaceMouseListener extends MouseAdapter {
@@ -97,7 +97,7 @@ public class CounterPanel extends JPanel {
      * @param emotion Numerical value of desired face.
      */
     public void updateFace(int emotion) {
-        button.flashEmotion(emotion);
+       button.flashEmotion(emotion);
     }
 
     public void setDigits() {
