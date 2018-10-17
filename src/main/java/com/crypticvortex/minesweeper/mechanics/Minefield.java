@@ -31,7 +31,7 @@ public class Minefield {
 
     private ArrayList<Integer> getMinesCoordinate(){
         Random random = new Random(this.seed);
-        int nbOfMines = Math.round(tiles.length / (MINE_PERCENT + diff.getAmount()));
+        int nbOfMines = Math.round(tiles.length * (MINE_PERCENT + diff.getAmount()) / 100);
         ArrayList<Integer> minesCoordinate = new ArrayList<>(nbOfMines);
 
         for(int i = 0; i < nbOfMines; ++i) {
@@ -99,6 +99,11 @@ public class Minefield {
                 nearbyTiles[2] = tiles[index + width + 1];
         }
 
+        int nearbyTilesAmount = 0;
+        for(Tile tile : nearbyTiles){
+            if(tile != null)
+                ++nearbyTilesAmount;
+        }
         return nearbyTiles;
     }
 
