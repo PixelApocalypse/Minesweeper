@@ -56,7 +56,7 @@ public class Tile {
      * Set the tile as shown if it does not have a flag.
      * @return true if the tile is a mine
      */
-    public boolean showTile(){
+    public boolean show(){
         if(flagType == FlagType.INVALID)
             return false;
         isDiscovered = true;
