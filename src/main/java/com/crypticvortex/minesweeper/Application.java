@@ -3,13 +3,15 @@ package com.crypticvortex.minesweeper;
 import com.crypticvortex.minesweeper.mechanics.Difficulty;
 import com.crypticvortex.minesweeper.mechanics.Minefield;
 import com.crypticvortex.minesweeper.menus.GameScreen;
-import com.crypticvortex.minesweeper.menus.StartScreen;
 
 import javax.swing.*;
-import java.util.Objects;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * Application window.
+ *
+ * @author Jatboy
+ */
 public class Application extends JFrame {
     private Minefield field;
 
@@ -46,10 +48,16 @@ public class Application extends JFrame {
         pack();
     }
 
+    /**
+     * @return Local minefield variable.
+     */
     public Minefield getMinefield() {
         return field;
     }
 
+    /**
+     * @return Application's main logger.
+     */
     public static Logger getLogger() {
         return logger;
     }

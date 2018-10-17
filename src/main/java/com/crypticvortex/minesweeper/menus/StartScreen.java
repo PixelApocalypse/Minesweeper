@@ -3,6 +3,11 @@ package com.crypticvortex.minesweeper.menus;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * Main interface upon app start.
+ *
+ * @author Jatboy
+ */
 public class StartScreen extends JPanel {
 
     /**

@@ -4,9 +4,14 @@ import com.crypticvortex.minesweeper.Application;
 
 import javax.swing.*;
 
+/**
+ * Image icons for the buttons on the interface.
+ *
+ * @author jatboy
+ */
 public class MenuIcons {
-    public static final ImageIcon EMPTY = getIcon(-1);
-    public static final ImageIcon MINE = getIcon(0);
+    public static final ImageIcon EMPTY    = getIcon(-1);
+    public static final ImageIcon MINE     = getIcon(0);
     public static final ImageIcon NUMBER_1 = getIcon(1);
     public static final ImageIcon NUMBER_2 = getIcon(2);
     public static final ImageIcon NUMBER_3 = getIcon(3);
@@ -16,6 +21,11 @@ public class MenuIcons {
     public static final ImageIcon NUMBER_7 = getIcon(7);
     public static final ImageIcon NUMBER_8 = getIcon(8);
 
+    /**
+     * Retrieves an icon from the local classpath.
+     * @param file Index of the file to retrieve.
+     * @return Requested image
+     */
     private static ImageIcon getIcon(int file) {
         ImageIcon icon = null;
         switch(file) {

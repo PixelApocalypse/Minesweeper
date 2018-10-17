@@ -2,6 +2,9 @@ package com.crypticvortex.minesweeper.mechanics;
 
 /**
  * Individual tile data.
+ *
+ * @author Jatboy
+ * @author Caraibe8
  */
 public class Tile {
     private boolean isMine;
@@ -32,15 +35,23 @@ public class Tile {
      * @param isMine if the tile should be considered as a mine
      * @param type what flag should the tile have
      */
-    public Tile(boolean isMine, FlagType type) { // Optional constructor for flags.
+    public Tile(boolean isMine, FlagType type) {
         this(isMine);
         this.flagType = type;
     }
 
-    public boolean isMine() { return isMine; }
+    public boolean isMine() {
+        return isMine;
+    }
 
-    public boolean isShown() { return isDiscovered; }
+    public boolean isShown() {
+        return isDiscovered;
+    }
 
+    /**
+     * Set the tile to have a flag of specified color.
+     * @param flagType Color of the flag to place.
+     */
     public void setFlagType(FlagType flagType) {
         if(!isDiscovered)
             this.flagType = flagType;

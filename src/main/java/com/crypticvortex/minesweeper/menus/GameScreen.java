@@ -8,6 +8,11 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+/**
+ * Transform Minefield data into a grid of clickable buttons.
+ *
+ * @author Jatboy
+ */
 public class GameScreen extends JPanel {
     private JButton[] tiles;
 
@@ -15,7 +20,6 @@ public class GameScreen extends JPanel {
         setLayout(new GridLayout(field.getWidth(), field.getHeight(), 0, 0 ));
 
         int size = field.getWidth() * field.getHeight();
-
         tiles = new JButton[size];
 
         for(int y = 0; y < field.getHeight(); y++) {
@@ -23,7 +27,7 @@ public class GameScreen extends JPanel {
                 int index = field.getWidth() * y + x;
                 boolean isMine = field.getTile(index).isMine();
                 TileButton tile = new TileButton(field.getTile(index), MenuIcons.EMPTY);
-                if(isMine) tile.setBackground(Color.RED);
+                if(isMine) tile.setBackground(Color.RED); // Testing
                 tile.addActionListener(new TileListener());
                 tile.setSize(50, 50);
                 tiles[Math.min(index, size)] = tile;
@@ -31,7 +35,7 @@ public class GameScreen extends JPanel {
             }
         }
     }
-    
+
     private class TileButton extends JButton {
         private Tile tile;
 
