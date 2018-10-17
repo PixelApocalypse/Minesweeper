@@ -3,6 +3,7 @@ package com.crypticvortex.minesweeper;
 import com.crypticvortex.minesweeper.mechanics.Difficulty;
 import com.crypticvortex.minesweeper.mechanics.Minefield;
 import com.crypticvortex.minesweeper.menus.CounterPanel;
+import com.crypticvortex.minesweeper.menus.DifficultyDialog;
 import com.crypticvortex.minesweeper.menus.GameScreen;
 import net.miginfocom.swing.MigLayout;
 
@@ -23,34 +24,6 @@ public class Application extends JFrame {
     private GameScreen screen;
     private Difficulty currentDiff;
 
-    /**
-     * "✓" = Done, "-" = Under Reevaluation, "X" = Not Feasible, "\" = In-Progress
-     *
-     *                       ---- CONTROLS ----
-     * [✓] Left click to reveal a square.
-     * [✓] Right click to place a flag to mark mine locations.
-     * [✓] Right click a flag to cycle it to a Question Mark, Right click that to remove it
-     * [ ] Left + Right click on a revealed number with all mines marked to clear remaining adjacent squares.
-     * [✓] Middle mouse to cycle flag color.
-     * [ ] N to create a new game.
-     *
-     *                       ---- MECHANICS ----
-     * [-] Scale the amount of mines to the size of the playing field on a percentile of total tiles.
-     * [✓] Never duplicate mine positions.
-     * [✓] Reveal large portions of empty squares on one click.
-     * [✓] Numbers based on adjacent mine count.
-     * [ ] Reveal all mines on defeat.
-     * [✓] Elapsed time counter.
-     * [✓] Approximate mine counter.
-     *
-     *                      ---- DIFFICULTIES ----
-     * [✓] Beginner: 9x9 10 Mines
-     * [✓] Intermediate: 16x16 40 Mines
-     * [✓] Expert: 30x30 99 Mines
-     * [ ] Custom: Minimum 7x7 10 Mines, Maximum Undetermined
-     * [ ] Experimental: Similar to Custom, Percentile mine generation
-     */
-
     public Application() {
         super("Minesweeper");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -68,7 +41,7 @@ public class Application extends JFrame {
 
         createMenuBar();
 
-        counter = new CounterPanel(getWidth());
+        counter = new CounterPanel(field);
         add(counter, "center, wrap");
 
         screen = new GameScreen(field, counter);
@@ -109,7 +82,20 @@ public class Application extends JFrame {
         gameMenu.add(expert);
 
         JMenuItem custom = new JMenuItem("Custom");
+        custom.addActionListener((e) -> {
+            currentDiff = Difficulty.CUSTOM;
+            JFrame frame = new DifficultyDialog(Difficulty.CUSTOM);
+            frame.setVisible(true);
+        });
         gameMenu.add(custom);
+
+        JMenuItem experimental = new JMenuItem("Experimental");
+        experimental.addActionListener((e) -> {
+            currentDiff = Difficulty.EXPERIMENTAL;
+            JFrame frame = new DifficultyDialog(Difficulty.EXPERIMENTAL);
+            frame.setVisible(true);
+        });
+        gameMenu.add(experimental);
         // ---- End Difficulties ----
 
         menuBar.add(gameMenu);
@@ -128,16 +114,21 @@ public class Application extends JFrame {
                 field = new Minefield(30, 30, 99);
                 break;
             case CUSTOM:
-                // TODO : Make the Custom Difficulty dialog, store the information inputted there and fetch it here.
+                field = new Minefield(DifficultyDialog.width, DifficultyDialog.height, DifficultyDialog.mines);
+                break;
+            case EXPERIMENTAL:
+                field = new Minefield(DifficultyDialog.width, DifficultyDialog.height, Difficulty.EXPERIMENTAL);
                 break;
         }
+
         field.populate();
-        setVisible(false);
         remove(screen);
         screen = new GameScreen(field, counter);
-        add(screen);
-        setVisible(true);
+        add(screen, "center");
+        counter.setField(field);
+        counter.setDigits();
         pack();
+        setLocationRelativeTo(null);
     }
 
     /**

@@ -1,5 +1,7 @@
 package com.crypticvortex.minesweeper.mechanics;
 
+import com.crypticvortex.minesweeper.menus.DifficultyDialog;
+
 /**
  * Enum of the difficulty settings and their adjustments to mine percentile.
  *

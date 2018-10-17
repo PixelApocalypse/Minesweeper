@@ -1,14 +1,13 @@
 package com.crypticvortex.minesweeper.menus;
 
 import com.crypticvortex.minesweeper.Application;
+import com.crypticvortex.minesweeper.mechanics.Minefield;
 import net.miginfocom.layout.LC;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.text.DecimalFormat;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Display area for Mine counter and Score counter.
@@ -16,16 +15,18 @@ import java.util.concurrent.TimeUnit;
  * @author Jatboy
  */
 public class CounterPanel extends JPanel {
+    private Thread thread;
+    private Minefield field;
+    private boolean completed;
+    private FaceButton button;
     private String score, mines;
     private JLabel[] mineDigits;
     private JLabel[] scoreDigits;
-    private FaceButton button;
-    private Thread thread;
-    private boolean completed;
 
-    public CounterPanel(int width) {
+    public CounterPanel(Minefield field) {
+        this.field = field;
+
         setLayout(new MigLayout(new LC().insets("10", "5", "10", "5").gridGap("0", "0")));
-        setSize(width, 50);
         setBorder(BorderFactory.createLoweredBevelBorder());
 
         mineDigits = new JLabel[3];
@@ -49,7 +50,9 @@ public class CounterPanel extends JPanel {
             add(scoreDigits[s], "cell " + (5 + s) + " 0");
 
         score = "000";
-        mines = "010";
+        int mineCount = field.getMineCount();
+        mines = (mineCount < 100 ? "0" : "") + mineCount;
+        setDigits();
 
         new Thread(() -> {
             while(true) {
@@ -69,22 +72,43 @@ public class CounterPanel extends JPanel {
                 } catch (Exception ex) {}
             }
         }).start();
+    }
 
+    /**
+     * Used for conveying facial expressions when performing actions, will always quickly reset back to default after updating.
+     * @param emotion Numerical value of desired face.
+     */
+    public void updateFace(int emotion) {
+        button.flashEmotion(emotion);
+    }
+
+    /**
+     * Reinitalizes the Minefield variable.
+     * @param field New reference.
+     */
+    public void setField(Minefield field) {
+        this.field = field;
+        int mineCount = this.field.getMineCount();
+        mines = (mineCount < 100 ? "0" : "") + mineCount;
         setDigits();
-        /**
-         * End result:
-         * 3 digit counter displayed from images on either side; one for mines the other for score
-         * Face button in the center which changes expression based on game state
-         */
     }
 
     public void increaseMines() {
-        int mines = Integer.parseInt(this.mines);
-        mines++;
-        this.mines = (mines < 9 ? "00" : "0") + mines;
+        int count = Integer.parseInt(mines.replaceFirst("^0+(?!$)", ""));
+        count++;
+        StringBuilder builder = new StringBuilder();
+        if(count < 0) {
+            builder.append(count > -10 ? "0" : "");
+        } else
+            builder.append(count < 10 ? "00" : "0");
+        builder.append(count);
+        this.mines = builder.toString();
         setDigits();
     }
 
+    /**
+     * Decrease the number of mines the counter displays.
+     */
     public void decreaseMines() {
         int count = Integer.parseInt(mines.replaceFirst("^0+(?!$)", ""));
         count--;
@@ -99,34 +123,31 @@ public class CounterPanel extends JPanel {
     }
 
     /**
-     * Used for conveying facial expressions when performing actions, will always quickly reset back to default after updating.
-     * @param emotion Numerical value of desired face.
+     * Changes the icon for each of the three digits by breaking down the character arrays.
      */
-    public void updateFace(int emotion) {
-       button.flashEmotion(emotion);
-    }
-
     public void setDigits() {
-        int digit = 0;
+        int sDigit = 0;
         for(char c : score.toCharArray()) {
             switch(c) {
-                case '0': scoreDigits[digit].setIcon(MenuIcons.COUNTER_0); break;
-                case '1': scoreDigits[digit].setIcon(MenuIcons.COUNTER_1); break;
-                case '2': scoreDigits[digit].setIcon(MenuIcons.COUNTER_2); break;
-                case '3': scoreDigits[digit].setIcon(MenuIcons.COUNTER_3); break;
-                case '4': scoreDigits[digit].setIcon(MenuIcons.COUNTER_4); break;
-                case '5': scoreDigits[digit].setIcon(MenuIcons.COUNTER_5); break;
-                case '6': scoreDigits[digit].setIcon(MenuIcons.COUNTER_6); break;
-                case '7': scoreDigits[digit].setIcon(MenuIcons.COUNTER_7); break;
-                case '8': scoreDigits[digit].setIcon(MenuIcons.COUNTER_8); break;
-                case '9': scoreDigits[digit].setIcon(MenuIcons.COUNTER_9); break;
-                case '-': scoreDigits[digit].setIcon(MenuIcons.COUNTER_DASH); break;
+                case '0': scoreDigits[sDigit].setIcon(MenuIcons.COUNTER_0); break;
+                case '1': scoreDigits[sDigit].setIcon(MenuIcons.COUNTER_1); break;
+                case '2': scoreDigits[sDigit].setIcon(MenuIcons.COUNTER_2); break;
+                case '3': scoreDigits[sDigit].setIcon(MenuIcons.COUNTER_3); break;
+                case '4': scoreDigits[sDigit].setIcon(MenuIcons.COUNTER_4); break;
+                case '5': scoreDigits[sDigit].setIcon(MenuIcons.COUNTER_5); break;
+                case '6': scoreDigits[sDigit].setIcon(MenuIcons.COUNTER_6); break;
+                case '7': scoreDigits[sDigit].setIcon(MenuIcons.COUNTER_7); break;
+                case '8': scoreDigits[sDigit].setIcon(MenuIcons.COUNTER_8); break;
+                case '9': scoreDigits[sDigit].setIcon(MenuIcons.COUNTER_9); break;
+                case '-': scoreDigits[sDigit].setIcon(MenuIcons.COUNTER_DASH); break;
             }
-            digit++;
+            sDigit++;
         }
 
-        digit = 0;
-        for(char c : mines.toCharArray()) {
+        int digit = 0;
+        if(Integer.parseInt(mines) > 999)
+            mines = "999";
+        for(char c : mines.substring(0, 3).toCharArray()) {
             switch(c) {
                 case '0': mineDigits[digit].setIcon(MenuIcons.COUNTER_0); break;
                 case '1': mineDigits[digit].setIcon(MenuIcons.COUNTER_1); break;
@@ -152,6 +173,8 @@ public class CounterPanel extends JPanel {
             setSelectedIcon(MenuIcons.FACE_SMILEY_PRESS);
             addMouseListener(new FaceMouseListener());
             addActionListener((e) -> {
+                score = "000";
+                setDigits();
                 Application.get.createField();
             });
         }

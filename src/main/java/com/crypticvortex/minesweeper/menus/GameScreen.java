@@ -1,18 +1,14 @@
 package com.crypticvortex.minesweeper.menus;
 
-import com.crypticvortex.minesweeper.Application;
 import com.crypticvortex.minesweeper.mechanics.Minefield;
 import com.crypticvortex.minesweeper.mechanics.Tile;
 import net.miginfocom.layout.AC;
 import net.miginfocom.layout.LC;
 import net.miginfocom.swing.MigLayout;
-import org.w3c.dom.css.Counter;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 
 /**
  * Transform Minefield data into a grid of clickable buttons.
@@ -50,10 +46,17 @@ public class GameScreen extends JPanel {
     private class TileClickListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             Tile tile = (Tile) e.getSource();
-            field.showTile(tile.getId());
+            field.showTile(tile.getId(), true);
             counter.updateFace(0);
-            if(field.gameWon())
-                JOptionPane.showMessageDialog(null, "Game Won!");
+            if (!tile.isMine()) {
+                if (field.gameWon())
+                    JOptionPane.showMessageDialog(null, "Game Won!");
+            } else {
+                for(int i : field.getMineCoordinates())
+                    if(!field.getTile(i).equals(tile))
+                    field.showTile(i, false);
+                JOptionPane.showMessageDialog(null, "Game Over! Click the face to restart.");
+            }
         }
     }
 
