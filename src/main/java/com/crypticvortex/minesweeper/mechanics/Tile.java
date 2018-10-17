@@ -88,19 +88,19 @@ public class Tile extends JButton {
      * @return true if the tile is a mine
      */
     public boolean showTile(){
-        if(flagType == FlagType.INVALID)
+        if(flagType != FlagType.INVALID)
             return false;
         isDiscovered = true;
-        return isMine;
+        return true;
     }
 
 
     private final Border empty = BorderFactory.createEmptyBorder();
 
     public void cycleColor() {
-        if(!isShown()) {
-            if (getFlagType() != FlagType.INVALID) {
-                switch(getFlagType()) {
+        if(!isDiscovered) {
+            if (flagType != FlagType.INVALID) {
+                switch(flagType) {
                     case BLUE:
                         if(setFlagType(FlagType.GREEN))
                             setIcon(MenuIcons.FLAG_GREEN);

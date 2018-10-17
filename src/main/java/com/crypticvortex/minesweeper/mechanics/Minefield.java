@@ -107,7 +107,7 @@ public class Minefield {
      */
     public void showTile(int index) {
         Tile tile = tiles[index];
-        if(!tile.isShown() && tile.getFlagType() == FlagType.INVALID) {
+        if(tile.showTile()) {
             if(tile.isMine()) {
                 tile.setIcon(MenuIcons.MINE_PRESSED);
             } else {
@@ -126,7 +126,7 @@ public class Minefield {
                         break;
                 }
             }
-            tile.show();
+
         }
     }
 
