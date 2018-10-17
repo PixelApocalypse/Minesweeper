@@ -6,9 +6,8 @@ package com.crypticvortex.minesweeper.mechanics;
  * @author Jatboy
  */
 public enum FlagType {
-    INVALID,
-    RED,
-    BLUE,
-    GREEN,
-    YELLOW;
+    // Other states
+    INVALID,QUESTION,
+    // Number colors
+    RED, BLUE, GREEN, PURPLE, MAROON, TURQUOISE, BLACK, GRAY;
 }

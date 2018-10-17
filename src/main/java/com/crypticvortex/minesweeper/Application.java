@@ -3,6 +3,7 @@ package com.crypticvortex.minesweeper;
 import com.crypticvortex.minesweeper.mechanics.Difficulty;
 import com.crypticvortex.minesweeper.mechanics.Minefield;
 import com.crypticvortex.minesweeper.menus.GameScreen;
+import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -30,7 +31,7 @@ public class Application extends JFrame {
      * [ ] Right click to place a flag to mark mine locations.
      * [ ] Right click a flag to cycle it to a Question Mark, Right click that to remove it
      * [ ] Left + Right click on a revealed number with all mines marked to clear remaining adjacent squares.
-     * [ ] Shift + Right Click to cycle flag color.
+     * [ ] Middle mouse to cycle flag color.
      * [ ] N to create a new game.
      *
      *                       ---- MECHANICS ----
@@ -55,7 +56,7 @@ public class Application extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(400, 400);
         setLocationRelativeTo(null);
-        setLayout(new FlowLayout(FlowLayout.CENTER, 0, 0));
+        setLayout(new MigLayout());
         setResizable(false);
 
         try {
@@ -81,7 +82,7 @@ public class Application extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 switch(currentDiff) {
                     case BEGINNER:
-                        field = new Minefield(9,9, 10);
+                        field = new Minefield(9, 9, 10);
                         break;
                     case INTERMEDIATE:
                         field = new Minefield(16, 16, 40);
