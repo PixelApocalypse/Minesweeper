@@ -1,7 +1,5 @@
 package com.crypticvortex.minesweeper.mechanics;
 
-import org.omg.CORBA.DynAnyPackage.Invalid;
-
 /**
  * Individual tile data.
  */
@@ -16,7 +14,7 @@ public class Tile {
      */
     public Tile(Tile tile){
         this(tile.isMine(), tile.getFlagType());
-        isDiscovered = tile.isDiscovered();
+        isDiscovered = tile.isShown();
     }
 
     /**
@@ -41,7 +39,7 @@ public class Tile {
 
     public boolean isMine() { return isMine; }
 
-    public boolean isDiscovered() { return isDiscovered; }
+    public boolean isShown() { return isDiscovered; }
 
     public void setFlagType(FlagType flagType) {
         if(!isDiscovered)
