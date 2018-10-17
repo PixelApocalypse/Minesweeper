@@ -8,7 +8,6 @@ import java.util.Random;
  * Stores data on mine positions, etc.
  */
 public class Minefield {
-    private static final java.util.Arrays Arrays = ;
     private Tile[] tiles;
     private Difficulty diff;
     private int width, height;
