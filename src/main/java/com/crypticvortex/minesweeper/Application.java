@@ -10,6 +10,7 @@ import net.miginfocom.swing.MigLayout;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.logging.Logger;
@@ -74,8 +75,11 @@ public class Application extends JFrame {
         currentDiff = Difficulty.BEGINNER;
 
         beginner.addChangeListener(list);
+        beginner.setAccelerator(KeyStroke.getKeyStroke('B', Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
         intermediate.addChangeListener(list);
+        intermediate.setAccelerator(KeyStroke.getKeyStroke('I', Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
         expert.addChangeListener(list);
+        expert.setAccelerator(KeyStroke.getKeyStroke('E', Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
 
         gameMenu.add(beginner);
         gameMenu.add(intermediate);
@@ -87,6 +91,7 @@ public class Application extends JFrame {
             JFrame frame = new DifficultyDialog(Difficulty.CUSTOM);
             frame.setVisible(true);
         });
+        custom.setAccelerator(KeyStroke.getKeyStroke('C', Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
         gameMenu.add(custom);
 
         JMenuItem experimental = new JMenuItem("Experimental");
@@ -95,6 +100,7 @@ public class Application extends JFrame {
             JFrame frame = new DifficultyDialog(Difficulty.EXPERIMENTAL);
             frame.setVisible(true);
         });
+        experimental.setAccelerator(KeyStroke.getKeyStroke('X', Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
         gameMenu.add(experimental);
         // ---- End Difficulties ----
 

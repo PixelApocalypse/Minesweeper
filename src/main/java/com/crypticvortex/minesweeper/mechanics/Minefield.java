@@ -84,7 +84,6 @@ public class Minefield {
         int nbOfMines;
         if(diff == Difficulty.EXPERIMENTAL) {
             nbOfMines = Math.round(tiles.length * (MINE_PERCENT + DifficultyDialog.mines_percent) / 100);
-            System.out.println("Mine % : " + MINE_PERCENT);
         } else
             nbOfMines = mineCount;
         if(this.mineCount > 0)

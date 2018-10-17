@@ -1,6 +1,7 @@
 package com.crypticvortex.minesweeper.menus;
 
 import com.crypticvortex.minesweeper.Application;
+import com.crypticvortex.minesweeper.mechanics.FlagType;
 import com.crypticvortex.minesweeper.mechanics.Minefield;
 import com.crypticvortex.minesweeper.mechanics.Tile;
 import net.miginfocom.layout.AC;
@@ -52,7 +53,7 @@ public class GameScreen extends JPanel {
             if (!tile.isMine()) {
                 if (field.gameWon())
                     JOptionPane.showMessageDialog(Application.get, "Game Won!");
-            } else {
+            } else if (tile.isMine()) {
                 for(int i : field.getMineCoordinates())
                     if(!field.getTile(i).equals(tile))
                     field.showTile(i, false);
