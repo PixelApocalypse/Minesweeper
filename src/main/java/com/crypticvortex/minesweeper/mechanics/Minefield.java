@@ -58,7 +58,7 @@ public class Minefield {
     public void populate() {
         ArrayList<Integer> minesCoordonate = getMinesIndex();
         for(int i = 0; i < width * height; ++i){
-            tiles[i] = new Tile(minesCoordonate.contains(i));
+            tiles[i] = new Tile(i, minesCoordonate.contains(i));
         }
     }
 

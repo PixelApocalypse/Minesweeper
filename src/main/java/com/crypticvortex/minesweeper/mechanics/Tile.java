@@ -29,6 +29,7 @@ public class Tile extends JButton {
 
     /**
      * Create a new tile
+     * @param id of the tile
      * @param isMine if the tile should be considered as a mine
      */
     public Tile(int id, boolean isMine) {
@@ -46,6 +47,7 @@ public class Tile extends JButton {
 
     /**
      * Create a new tile with the given flag.
+     * @param id of the tile
      * @param isMine if the tile should be considered as a mine
      * @param type what flag should the tile have
      */
