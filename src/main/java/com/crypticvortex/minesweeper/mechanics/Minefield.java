@@ -1,5 +1,7 @@
 package com.crypticvortex.minesweeper.mechanics;
 
+import com.crypticvortex.minesweeper.menus.MenuIcons;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
@@ -95,7 +97,7 @@ public class Minefield {
     }
 
     public Tile getTile(int index){
-        return tiles[index];
+        return new Tile(tiles[index]);
     }
 
     /**
@@ -103,8 +105,29 @@ public class Minefield {
      * @param index of the tile to show
      * @return if the tile was successfully shown
      */
-    public boolean showTile(int index) {
-        return tiles[index].show();
+    public void showTile(int index) {
+        Tile tile = tiles[index];
+        if(!tile.isShown() && tile.getFlagType() == FlagType.INVALID) {
+            if(tile.isMine()) {
+                tile.setIcon(MenuIcons.MINE_PRESSED);
+            } else {
+                int mines = getNearbyMines(index);
+                switch(mines) {
+                    case 1: tile.setIcon(MenuIcons.NUMBER_1); break;
+                    case 2: tile.setIcon(MenuIcons.NUMBER_2); break;
+                    case 3: tile.setIcon(MenuIcons.NUMBER_3); break;
+                    case 4: tile.setIcon(MenuIcons.NUMBER_4); break;
+                    case 5: tile.setIcon(MenuIcons.NUMBER_5); break;
+                    case 6: tile.setIcon(MenuIcons.NUMBER_6); break;
+                    case 7: tile.setIcon(MenuIcons.NUMBER_7); break;
+                    case 8: tile.setIcon(MenuIcons.NUMBER_8); break;
+                    default:
+                        tile.setIcon(MenuIcons.EMPTY);
+                        break;
+                }
+            }
+            tile.show();
+        }
     }
 
     /**
@@ -180,5 +203,21 @@ public class Minefield {
 
     public boolean setTileFlagType(int index, FlagType flagType){
         return tiles[index].setFlagType(flagType);
+    }
+
+    public void plantFlag(int index) {
+        Tile tile = getTile(index);
+        if(!tile.isShown()) {
+            if (tile.getFlagType() == FlagType.INVALID) {
+                if(setTileFlagType(index, FlagType.RED))
+                    tile.setIcon(MenuIcons.FLAG_RED);
+            } else if (tile.getFlagType() == FlagType.RED) {
+                if(setTileFlagType(index, FlagType.QUESTION))
+                    tile.setIcon(MenuIcons.FLAG_QUESTION);
+            } else if (tile.getFlagType() == FlagType.QUESTION) {
+                if(setTileFlagType(index, FlagType.INVALID))
+                    tile.setIcon(MenuIcons.DEFAULT);
+            }
+        }
     }
 }

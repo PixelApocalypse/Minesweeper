@@ -1,12 +1,18 @@
 package com.crypticvortex.minesweeper.mechanics;
 
+import com.crypticvortex.minesweeper.menus.MenuIcons;
+
+import javax.swing.*;
+import javax.swing.border.Border;
+import java.awt.*;
+
 /**
  * Individual tile data.
  *
  * @author Jatboy
  * @author Caraibe8
  */
-public class Tile {
+public class Tile extends JButton {
     private boolean isMine;
     private boolean isDiscovered;
     private FlagType flagType; //INVALID if no flag is present.
@@ -28,6 +34,12 @@ public class Tile {
         this.isMine = isMine;
         this.isDiscovered = false;
         flagType = FlagType.INVALID;
+
+        setPreferredSize(new Dimension(16, 16));
+        setMargin(new Insets(0,0, 0, 0));
+        setIcon(MenuIcons.DEFAULT);
+        setFocusPainted(false);
+        setBorder(empty);
     }
 
     /**
@@ -69,10 +81,55 @@ public class Tile {
      * Set the tile as shown if it does not have a flag.
      * @return true if the tile is a mine
      */
-    public boolean show(){
+    public boolean showTile(){
         if(flagType == FlagType.INVALID)
             return false;
         isDiscovered = true;
         return isMine;
+    }
+
+
+    private final Border empty = BorderFactory.createEmptyBorder();
+
+    public void cycleColor() {
+        if(!isShown()) {
+            if (getFlagType() != FlagType.INVALID) {
+                switch(getFlagType()) {
+                    case BLUE:
+                        if(setFlagType(FlagType.GREEN))
+                            setIcon(MenuIcons.FLAG_GREEN);
+                        break;
+                    case GREEN:
+                        if(setFlagType(FlagType.RED))
+                            setIcon(MenuIcons.FLAG_RED);
+                        break;
+                    case RED:
+                        if(setFlagType(FlagType.PURPLE))
+                            setIcon(MenuIcons.FLAG_PURPLE);
+                        break;
+                    case PURPLE:
+                        if(setFlagType(FlagType.MAROON))
+                            setIcon(MenuIcons.FLAG_MAROON);
+                        break;
+                    case MAROON:
+                        if(setFlagType(FlagType.TURQUOISE))
+                            setIcon(MenuIcons.FLAG_TURQUOISE);
+                        break;
+                    case TURQUOISE:
+                        if(setFlagType(FlagType.BLACK))
+                            setIcon(MenuIcons.FLAG_BLACK);
+                        break;
+                    case BLACK:
+                        if(setFlagType(FlagType.GRAY))
+                            setIcon(MenuIcons.FLAG_GRAY);
+                        break;
+                    case GRAY:
+                        if(setFlagType(FlagType.BLUE))
+                            setIcon(MenuIcons.FLAG_BLUE);
+                        break;
+                    default: break;
+                }
+            }
+        }
     }
 }
