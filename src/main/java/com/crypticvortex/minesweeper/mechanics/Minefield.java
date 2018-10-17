@@ -95,7 +95,7 @@ public class Minefield {
     }
 
     public Tile getTile(int index){
-        return new Tile(tiles[index]);
+        return tiles[index];
     }
 
     /**
@@ -153,8 +153,6 @@ public class Minefield {
      * @return all tiles around the given tile
      */
     private Tile[] getNearbyTiles(int index){
-        System.out.println("Source index: " + index);
-
         ArrayList<Tile> nearbyTiles = new ArrayList<>();
 
         if(index - width - 1 >= 0 && (index - width - 1) / width == (index - width) / width)
@@ -176,10 +174,7 @@ public class Minefield {
         if(index + width + 1 < tiles.length && (index + width + 1) / width == (index + width) / width)
             nearbyTiles.add(tiles[index + width + 1]);
 
-
-        System.out.println("Nearby Tiles: " + nearbyTiles.size());
         Tile[] optimisedNearbyTiles = nearbyTiles.toArray(new Tile[] {});
-
         return optimisedNearbyTiles;
     }
 
