@@ -1,11 +1,17 @@
 package com.crypticvortex.minesweeper;
 
+import com.crypticvortex.minesweeper.mechanics.Difficulty;
+import com.crypticvortex.minesweeper.mechanics.Minefield;
+import com.crypticvortex.minesweeper.menus.GameScreen;
 import com.crypticvortex.minesweeper.menus.StartScreen;
 
 import javax.swing.*;
+import java.util.Objects;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Application extends JFrame {
-    private static final long serialVersionUID = -1L;
+    private Minefield field;
 
     /**
      * CONTROLS:
@@ -30,7 +36,22 @@ public class Application extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(400, 400);
         setLocationRelativeTo(null);
-        setContentPane(new StartScreen());
+        setResizable(false);
+
+        field = new Minefield(16, Difficulty.MEDIUM);
+        field.populate();
+
+//        setContentPane(new StartScreen());
+        setContentPane(new GameScreen(field));
+        pack();
+    }
+
+    public Minefield getMinefield() {
+        return field;
+    }
+
+    public static Logger getLogger() {
+        return logger;
     }
 
     public static void main(String[] args) {
@@ -42,4 +63,6 @@ public class Application extends JFrame {
         app.setVisible(true);
     }
 
+    private static final long serialVersionUID = -1L;
+    private static final Logger logger = Logger.getLogger("Minesweeper");
 }
