@@ -64,13 +64,17 @@ public class GameScreen extends JPanel {
             setFocusPainted(false);
             setBorder(empty);
             this.tile = tile;
+            this.index = index;
         }
 
         public void showTile() {
-            if(!tile.isShown()) {
+            if(tile.isMine()){
+                setIcon(MenuIcons.MINE_PRESSED);
+            }
+            else{
                 int mines = field.getNearbyMines(index);
                 System.out.println("Nearby mines: " + mines);
-                /*switch(mines) {
+                switch(mines) {
                     case 1: setIcon(MenuIcons.NUMBER_1); break;
                     case 2: setIcon(MenuIcons.NUMBER_2); break;
                     case 3: setIcon(MenuIcons.NUMBER_3); break;
@@ -82,7 +86,7 @@ public class GameScreen extends JPanel {
                     default:
                         setIcon(MenuIcons.EMPTY);
                         break;
-                }*/
+                }
                 tile.show();
             }
         }

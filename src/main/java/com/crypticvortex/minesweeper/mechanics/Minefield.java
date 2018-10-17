@@ -126,9 +126,10 @@ public class Minefield {
      * @return is the game finished
      */
     public boolean gameWon(){
-        for(int i = 0; i < tiles.length; ++i)
-            if(!tiles[i].isShown() && !tiles[i].isMine())
+        for(int i = 0; i < tiles.length; ++i) {
+            if (!tiles[i].isShown() && !tiles[i].isMine())
                 return false;
+        }
         return true;
     }
 
@@ -152,34 +153,37 @@ public class Minefield {
      * @return all tiles around the given tile
      */
     private Tile[] getNearbyTiles(int index){
+        System.out.println("Source index: " + index);
+
         ArrayList<Tile> nearbyTiles = new ArrayList<>();
-        int y = index / width;
 
-        if(!(y - width < 0)) {
-            if((index - 1)/width == y - 1)
-                nearbyTiles.add(tiles[index - width - 1]);
+        if(index - width - 1 >= 0 && (index - width - 1) / width == (index - width) / width)
+            nearbyTiles.add(tiles[index - width - 1]);
+        if(index - width >= 0)
             nearbyTiles.add(tiles[index - width]);
-            if((index + 1)/width == y - 1)
-                nearbyTiles.add(tiles[index - width + 1]);
-        }
+        if(index - width + 1 >= 0 && (index - width + 1) / width == (index - width) / width)
+            nearbyTiles.add(tiles[index - width + 1]);
 
-        if((index - 1) / width == y)
+        if(index - 1 >= 0 && (index - 1) / width == index / width)
             nearbyTiles.add(tiles[index - 1]);
-        if((index + 1) / width == y)
+        if(index + 1 < tiles.length && (index + 1) / width == index / width)
             nearbyTiles.add(tiles[index + 1]);
 
-        if(!(y + width >= tiles.length)){
-            if((index - 1)/width == y + 1)
-                nearbyTiles.add(tiles[index + width - 1]);
+        if(index + width - 1 < tiles.length && (index + width - 1) / width == (index + width) / width)
+            nearbyTiles.add(tiles[index + width - 1]);
+        if(index + width < tiles.length && (index + width) / width == (index + width) / width)
             nearbyTiles.add(tiles[index + width]);
-            if((index + 1)/width == y + 1)
-                nearbyTiles.add(tiles[index + width + 1]);
-        }
+        if(index + width + 1 < tiles.length && (index + width + 1) / width == (index + width) / width)
+            nearbyTiles.add(tiles[index + width + 1]);
 
-        nearbyTiles.removeAll(null);
 
+        System.out.println("Nearby Tiles: " + nearbyTiles.size());
         Tile[] optimisedNearbyTiles = nearbyTiles.toArray(new Tile[] {});
 
         return optimisedNearbyTiles;
+    }
+
+    public boolean setTileFlagType(int index, FlagType flagType){
+        return tiles[index].setFlagType(flagType);
     }
 }

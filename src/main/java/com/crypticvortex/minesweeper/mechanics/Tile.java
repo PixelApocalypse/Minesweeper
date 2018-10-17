@@ -51,10 +51,14 @@ public class Tile {
     /**
      * Set the tile to have a flag of specified color.
      * @param flagType Color of the flag to place.
+     * @return If the value is set.
      */
-    public void setFlagType(FlagType flagType) {
-        if(!isDiscovered)
+    public boolean setFlagType(FlagType flagType) {
+        if(!isDiscovered) {
             this.flagType = flagType;
+            return true;
+        }
+        return false;
     }
 
     public FlagType getFlagType() {
