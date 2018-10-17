@@ -62,12 +62,12 @@ public class GameScreen extends JPanel {
             setIcon(MenuIcons.DEFAULT);
             setFocusPainted(false);
             setBorder(empty);
-            this.tile = tile;
+            this.tile = field.getTile(index);
             this.index = index;
         }
 
         public void showTile() {
-            if(!tile.isShown()) {
+            if(!tile.isShown() && tile.getFlagType() == FlagType.INVALID) {
                 if(tile.isMine()) {
                     setIcon(MenuIcons.MINE_PRESSED);
                 } else {
@@ -85,21 +85,21 @@ public class GameScreen extends JPanel {
                             setIcon(MenuIcons.EMPTY);
                             break;
                     }
-                    tile.show();
                 }
+                tile.show();
             }
         }
 
         public void plantFlag() {
-            if(!tile.isShown()) {
+            if(!field.getTile(index).isShown()) {
                 if (tile.getFlagType() == FlagType.INVALID) {
-                    if(tile.setFlagType(FlagType.RED))
+                    if(field.setTileFlagType(index, FlagType.RED))
                         setIcon(MenuIcons.FLAG_RED);
                 } else if (tile.getFlagType() == FlagType.RED) {
-                    if(tile.setFlagType(FlagType.QUESTION))
+                    if(field.setTileFlagType(index, FlagType.QUESTION))
                         setIcon(MenuIcons.FLAG_QUESTION);
                 } else if (tile.getFlagType() == FlagType.QUESTION) {
-                    if(tile.setFlagType(FlagType.INVALID))
+                    if(field.setTileFlagType(index, FlagType.INVALID))
                         setIcon(MenuIcons.DEFAULT);
                 }
             }
