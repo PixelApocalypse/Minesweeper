@@ -31,7 +31,7 @@ public class GameScreen extends JPanel {
             }
         }
     }
-
+    
     private class TileButton extends JButton {
         private Tile tile;
 
