@@ -18,7 +18,7 @@ public class GameScreen extends JPanel {
         for(int y = 0; y < field.getHeight(); y++) {
             for (int x = 0; x < field.getWidth(); x++) {
                 int index = field.getWidth() * y + x;
-                JButton tile = new JButton(/*"" + (x + 1)*/(field.getTile(index).isMine() ? MenuIcons.MINE : MenuIcons.NUMBER_1));
+                JButton tile = new JButton((field.getTile(index).isMine() ? MenuIcons.MINE : MenuIcons.NUMBER_1));
                 tile.setSize(50, 50);
                 tiles[Math.min(index, size)] = tile;
                 add(tile);

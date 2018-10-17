@@ -62,49 +62,40 @@ public class Minefield {
     }
 
     public boolean showTile(int index) {
-        Tile tile = tiles[index];
+        return tiles[index].show();
+    }
 
-        if(tile.getFlagType() != FlagType.INVALID)
-            return false;
-
-        if(tile.isMine()){
-            //...
-        }
-        //if()
-        return false;
+    public int getNearbyMines(int index){
+        return getNearbyTiles(index).length;
     }
 
     private Tile[] getNearbyTiles(int index){
-        Tile[] nearbyTiles = new Tile[8];
+        ArrayList<Tile> nearbyTiles = new ArrayList<>();
         int y = index / width;
 
         if(!(y - width < 0)) {
             if((index - 1)/width == y - 1)
-                nearbyTiles[0] = tiles[index - width - 1];
-            nearbyTiles[1] = tiles[index - width];
+                nearbyTiles.add(tiles[index - width - 1]);
+            nearbyTiles.add(tiles[index - width]);
             if((index + 1)/width == y - 1)
-                nearbyTiles[2] = tiles[index - width + 1];
+                nearbyTiles.add(tiles[index - width + 1]);
         }
 
         if((index - 1) / width == y)
-            nearbyTiles[3] = tiles[index - 1];
+            nearbyTiles.add(tiles[index - 1]);
         if((index + 1) / width == y)
-            nearbyTiles[4] = tiles[index + 1];
+            nearbyTiles.add(tiles[index + 1]);
 
         if(!(y + width >= tiles.length)){
             if((index - 1)/width == y + 1)
-                nearbyTiles[0] = tiles[index + width - 1];
-            nearbyTiles[1] = tiles[index + width];
+                nearbyTiles.add(tiles[index + width - 1]);
+            nearbyTiles.add(tiles[index + width]);
             if((index + 1)/width == y + 1)
-                nearbyTiles[2] = tiles[index + width + 1];
+                nearbyTiles.add(tiles[index + width + 1]);
         }
+        Tile[] optimisedNearbyTiles = (Tile[]) nearbyTiles.toArray();
 
-        int nearbyTilesAmount = 0;
-        for(Tile tile : nearbyTiles){
-            if(tile != null)
-                ++nearbyTilesAmount;
-        }
-        return nearbyTiles;
+        return optimisedNearbyTiles;
     }
 
 
