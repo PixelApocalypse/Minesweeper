@@ -1,7 +1,10 @@
 package com.crypticvortex.minesweeper.mechanics;
 
+import com.crypticvortex.minesweeper.menus.CounterPanel;
 import com.crypticvortex.minesweeper.menus.MenuIcons;
 
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
@@ -15,6 +18,7 @@ public class Minefield {
     private Difficulty diff;
     private int width, height, mineCount;
     private final float MINE_PERCENT = 20f;
+    private boolean gameFinished;
 
     /**
      * Create a new minefield with the given parameters:
@@ -23,12 +27,16 @@ public class Minefield {
      * @param diff the amount of mines depends on the difficulty
      */
     public Minefield(int width, int height, Difficulty diff){
+        if(width < 2 || height < 2)
+            throw new IllegalArgumentException();
+
         this.seed = new Random().nextInt();
         this.width = width;
         this.height = height;
         this.diff = diff;
         this.tiles = new Tile[width * height];
         this.mineCount = 0;
+        this.gameFinished = false;
     }
     /**
      * Create a new minefield with the given parameters:
@@ -47,6 +55,8 @@ public class Minefield {
      */
     public Minefield(int width, int height, int mineCount) {
         this(width, height, Difficulty.CUSTOM);
+        if(mineCount < 1)
+            throw new IllegalArgumentException();
         this.mineCount = mineCount;
     }
 
@@ -60,7 +70,49 @@ public class Minefield {
         }
     }
 
-    /**
+    public void setTileMouseListener(int index, CounterPanel panel){
+        tiles[index].addMouseListener(new TileMouseListener(panel));
+    }
+
+    private class TileMouseListener implements MouseListener {
+        CounterPanel panel;
+        public TileMouseListener(CounterPanel panel){
+            super();
+            this.panel = panel;
+        }
+
+        @Override
+        public void mouseClicked(MouseEvent e) {
+
+        }
+
+        public void mousePressed(MouseEvent e) {
+            Tile tile = (Tile) e.getSource();
+            if (e.getButton() == MouseEvent.BUTTON3) {
+                plantFlag(tile.getId());
+                panel.updateFace(0);
+            }
+            if (e.getButton() == MouseEvent.BUTTON2)
+                tile.cycleColor();
+        }
+
+        @Override
+        public void mouseReleased(MouseEvent e) {
+
+        }
+
+        @Override
+        public void mouseEntered(MouseEvent e) {
+
+        }
+
+        @Override
+        public void mouseExited(MouseEvent e) {
+
+        }
+    }
+
+        /**
      * Gets and returns the index of all mines.
      * @return List of mine coordinates
      */
@@ -98,6 +150,11 @@ public class Minefield {
         return diff;
     }
 
+    /**
+     * Returns the tile at the given index.
+     * @param index of the mine to return
+     * @return copy of the tile at the given index.
+     */
     public Tile getTile(int index){
         return tiles[index];
     }
@@ -107,22 +164,29 @@ public class Minefield {
      * @param index of the tile to show
      * @return if the tile was successfully shown
      */
-    public void showTile(int index) {
+    public boolean showTile(int index) {
+        if(gameFinished)
+            return true;
+
         Tile tile = tiles[index];
         if(tile.getFlagType() != FlagType.INVALID)
-            return;
+            return false;
 
-        if(getNearbyMines(index) != 0 || tile.isMine())
+        if(getNearbyMines(index) != 0 || tile.isMine()) {
             showSingleTile(tile);
+            return tile.isMine();
+        }
 
         else
             showMultipleTiles(tile);
+        return false;
     }
 
     private void showSingleTile(Tile tile){
         if(tile.showTile()) {
             if(tile.isMine()) {
                 tile.setIcon(MenuIcons.MINE_PRESSED);
+                gameFinished = true;
             } else {
                 int mines = getNearbyMines(getTileIndex(tile));
                 switch(mines) {
@@ -186,6 +250,7 @@ public class Minefield {
             if (!tiles[i].isShown() && !tiles[i].isMine())
                 return false;
         }
+        gameFinished = true;
         return true;
     }
 
@@ -235,7 +300,10 @@ public class Minefield {
     }
 
     public void plantFlag(int index) {
-        Tile tile = getTile(index);
+        if(gameFinished)
+            return;
+
+        Tile tile = tiles[index];
         if(!tile.isShown()) {
             if (tile.getFlagType() == FlagType.INVALID) {
                 if(tile.setFlagType(FlagType.RED))
@@ -248,5 +316,11 @@ public class Minefield {
                     tile.setIcon(MenuIcons.DEFAULT);
             }
         }
+    }
+
+    public void cycleTileFlagColor(int index){
+        if(gameFinished)
+            return;
+        tiles[index].cycleColor();
     }
 }

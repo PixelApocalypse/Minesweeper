@@ -37,7 +37,7 @@ public class GameScreen extends JPanel {
                 int index = field.getWidth() * y + x;
                 Tile tile = field.getTile(index);
                 tile.addActionListener(new TileClickListener());
-                tile.addMouseListener(new TileMouseListener());
+                field.setTileMouseListener(index, counter);
                 tile.setSize(16, 16);
                 if(x == field.getWidth() - 1)
                     add(tile, "wrap");
