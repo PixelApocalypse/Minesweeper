@@ -1,6 +1,5 @@
 package com.crypticvortex.minesweeper.menus;
 
-import com.crypticvortex.minesweeper.mechanics.FlagType;
 import com.crypticvortex.minesweeper.mechanics.Minefield;
 import com.crypticvortex.minesweeper.mechanics.Tile;
 import net.miginfocom.layout.AC;
@@ -8,8 +7,6 @@ import net.miginfocom.layout.LC;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
-import javax.swing.border.Border;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -22,7 +19,6 @@ import java.awt.event.MouseListener;
  */
 public class GameScreen extends JPanel {
     private Minefield field;
-    private JButton[] tiles;
 
     public GameScreen(Minefield field) {
         this.field = field;
@@ -31,17 +27,14 @@ public class GameScreen extends JPanel {
 
         int size = field.getWidth() * field.getHeight();
         setSize(size + 10, size + 10);
-        tiles = new JButton[size];
 
         for(int y = 0; y < field.getHeight(); y++) {
             for (int x = 0; x < field.getWidth(); x++) {
                 int index = field.getWidth() * y + x;
-                boolean isMine = field.getTile(index).isMine();
-                TileButton tile = new TileButton(field.getTile(index), index);
+                Tile tile = field.getTile(index);
                 tile.addActionListener(new TileClickListener());
                 tile.addMouseListener(new TileMouseListener());
                 tile.setSize(16, 16);
-                tiles[Math.min(index, size)] = tile;
                 if(x == field.getWidth() - 1)
                     add(tile, "wrap");
                 else
@@ -50,24 +43,18 @@ public class GameScreen extends JPanel {
         }
     }
 
-    private class TileButton extends JButton {
-        private Tile tile;
-        private int index;
-
-    }
-
     private class TileClickListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-            TileButton tile = (TileButton) e.getSource();
-            tile.showTile();
+            Tile tile = (Tile) e.getSource();
+            field.showTile(tile.getId());
         }
     }
 
     private class TileMouseListener implements MouseListener {
         public void mousePressed(MouseEvent e) {
-            TileButton tile = (TileButton) e.getSource();
+            Tile tile = (Tile) e.getSource();
             if(e.getButton() == MouseEvent.BUTTON3)
-                tile.plantFlag();
+                field.plantFlag(tile.getId());
             if(e.getButton() == MouseEvent.BUTTON2)
                 tile.cycleColor();
         }

@@ -97,7 +97,7 @@ public class Minefield {
     }
 
     public Tile getTile(int index){
-        return new Tile(tiles[index]);
+        return tiles[index];
     }
 
     /**
