@@ -9,7 +9,6 @@ import net.miginfocom.swing.MigLayout;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.logging.Logger;
@@ -22,7 +21,6 @@ import java.util.logging.Logger;
 public class Application extends JFrame {
     private Minefield field;
     private GameScreen screen;
-    private CounterPanel counter;
     private Difficulty currentDiff;
 
     /**
@@ -30,8 +28,8 @@ public class Application extends JFrame {
      *
      *                       ---- CONTROLS ----
      * [✓] Left click to reveal a square.
-     * [ ] Right click to place a flag to mark mine locations.
-     * [ ] Right click a flag to cycle it to a Question Mark, Right click that to remove it
+     * [✓] Right click to place a flag to mark mine locations.
+     * [✓] Right click a flag to cycle it to a Question Mark, Right click that to remove it
      * [ ] Left + Right click on a revealed number with all mines marked to clear remaining adjacent squares.
      * [✓] Middle mouse to cycle flag color.
      * [ ] N to create a new game.
@@ -39,11 +37,11 @@ public class Application extends JFrame {
      *                       ---- MECHANICS ----
      * [-] Scale the amount of mines to the size of the playing field on a percentile of total tiles.
      * [✓] Never duplicate mine positions.
-     * [ ] Reveal large portions of empty squares on one click.
-     * [ ] Numbers based on adjacent mine count (all 8 squares); Blue for 1, Green for 2, Red for 3.
+     * [✓] Reveal large portions of empty squares on one click.
+     * [✓] Numbers based on adjacent mine count.
      * [ ] Reveal all mines on defeat.
-     * [ ] Elapsed time counter.
-     * [ ] Approximate mine counter.
+     * [✓] Elapsed time counter.
+     * [✓] Approximate mine counter.
      *
      *                      ---- DIFFICULTIES ----
      * [✓] Beginner: 9x9 10 Mines
@@ -71,11 +69,13 @@ public class Application extends JFrame {
         createMenuBar();
 
         counter = new CounterPanel(getWidth());
-        add(counter, "wrap");
+        add(counter, "center, wrap");
 
         screen = new GameScreen(field, counter);
         add(screen, "center");
         pack();
+
+        get = this;
     }
 
     private void createMenuBar() {
@@ -85,27 +85,7 @@ public class Application extends JFrame {
         JMenuItem newGame = new JMenuItem("New Game");
         newGame.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                switch(currentDiff) {
-                    case BEGINNER:
-                        field = new Minefield(9, 9, 10);
-                        break;
-                    case INTERMEDIATE:
-                        field = new Minefield(16, 16, 40);
-                        break;
-                    case EXPERT:
-                        field = new Minefield(30, 30, 99);
-                        break;
-                    case CUSTOM:
-                        // TODO : Make the Custom Difficulty dialog, store the information inputted there and fetch it here.
-                        break;
-                }
-                field.populate();
-                setVisible(false);
-                remove(screen);
-                screen = new GameScreen(field, counter);
-                add(screen);
-                setVisible(true);
-                pack();
+                createField();
             }
         });
         gameMenu.add(newGame);
@@ -136,30 +116,28 @@ public class Application extends JFrame {
         setJMenuBar(menuBar);
     }
 
-    private class DifficultyListener implements ChangeListener {
-        private JCheckBoxMenuItem item1, item2, item3;
-
-        public DifficultyListener(JCheckBoxMenuItem item1, JCheckBoxMenuItem item2, JCheckBoxMenuItem item3) {
-            this.item1 = item1;
-            this.item2 = item2;
-            this.item3 = item3;
+    public void createField() {
+        switch(currentDiff) {
+            case BEGINNER:
+                field = new Minefield(9, 9, 10);
+                break;
+            case INTERMEDIATE:
+                field = new Minefield(16, 16, 40);
+                break;
+            case EXPERT:
+                field = new Minefield(30, 30, 99);
+                break;
+            case CUSTOM:
+                // TODO : Make the Custom Difficulty dialog, store the information inputted there and fetch it here.
+                break;
         }
-
-        public void stateChanged(ChangeEvent e) {
-            if(e.getSource() == item1 && item1.isSelected()) {
-                item2.setSelected(false);
-                item3.setSelected(false);
-                currentDiff = Difficulty.BEGINNER;
-            } else if(e.getSource() == item2 && item2.isSelected()) {
-                item1.setSelected(false);
-                item3.setSelected(false);
-                currentDiff = Difficulty.INTERMEDIATE;
-            } else if(e.getSource() == item3 && item3.isSelected()) {
-                item1.setSelected(false);
-                item2.setSelected(false);
-                currentDiff = Difficulty.EXPERT;
-            }
-        }
+        field.populate();
+        setVisible(false);
+        remove(screen);
+        screen = new GameScreen(field, counter);
+        add(screen);
+        setVisible(true);
+        pack();
     }
 
     /**
@@ -186,6 +164,34 @@ public class Application extends JFrame {
         app.requestFocus();;
     }
 
+    private class DifficultyListener implements ChangeListener {
+        private JCheckBoxMenuItem item1, item2, item3;
+
+        public DifficultyListener(JCheckBoxMenuItem item1, JCheckBoxMenuItem item2, JCheckBoxMenuItem item3) {
+            this.item1 = item1;
+            this.item2 = item2;
+            this.item3 = item3;
+        }
+
+        public void stateChanged(ChangeEvent e) {
+            if(e.getSource() == item1 && item1.isSelected()) {
+                item2.setSelected(false);
+                item3.setSelected(false);
+                currentDiff = Difficulty.BEGINNER;
+            } else if(e.getSource() == item2 && item2.isSelected()) {
+                item1.setSelected(false);
+                item3.setSelected(false);
+                currentDiff = Difficulty.INTERMEDIATE;
+            } else if(e.getSource() == item3 && item3.isSelected()) {
+                item1.setSelected(false);
+                item2.setSelected(false);
+                currentDiff = Difficulty.EXPERT;
+            }
+        }
+    }
+
+    public static Application get;
+    public static CounterPanel counter;
     private static final long serialVersionUID = -1L;
     private static final Logger logger = Logger.getLogger("Minesweeper");
 }

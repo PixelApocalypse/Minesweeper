@@ -1,10 +1,13 @@
 package com.crypticvortex.minesweeper.mechanics;
 
+import com.crypticvortex.minesweeper.menus.CounterPanel;
 import com.crypticvortex.minesweeper.menus.MenuIcons;
 
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 /**
  * Individual tile data.
@@ -138,4 +141,5 @@ public class Tile extends JButton {
             }
         }
     }
+
 }

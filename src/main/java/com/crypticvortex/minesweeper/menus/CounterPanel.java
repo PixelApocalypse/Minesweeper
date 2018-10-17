@@ -1,13 +1,14 @@
 package com.crypticvortex.minesweeper.menus;
 
+import com.crypticvortex.minesweeper.Application;
 import net.miginfocom.layout.LC;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.awt.event.*;
+import java.text.DecimalFormat;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Display area for Mine counter and Score counter.
@@ -19,6 +20,8 @@ public class CounterPanel extends JPanel {
     private JLabel[] mineDigits;
     private JLabel[] scoreDigits;
     private FaceButton button;
+    private Thread thread;
+    private boolean completed;
 
     public CounterPanel(int width) {
         setLayout(new MigLayout(new LC().insets("10", "5", "10", "5").gridGap("0", "0")));
@@ -48,6 +51,25 @@ public class CounterPanel extends JPanel {
         score = "000";
         mines = "010";
 
+        new Thread(() -> {
+            while(true) {
+                try {
+                    Thread.sleep(1000);
+                    int score = Integer.parseInt(this.score);
+                    score++;
+                    this.score = (score < 10 ? "00" : "0") + Math.min(score, 999);
+                    setDigits();
+                    if (thread != null) {
+                        if (completed) {
+                            completed = false;
+                            thread.join();
+                            thread = null;
+                        }
+                    }
+                } catch (Exception ex) {}
+            }
+        }).start();
+
         setDigits();
         /**
          * End result:
@@ -56,40 +78,24 @@ public class CounterPanel extends JPanel {
          */
     }
 
-    private class FaceButton extends JButton {
-        public FaceButton() {
-            setFocusPainted(false);
-            setSize(26, 26);
-            setIcon(MenuIcons.FACE_SMILEY);
-            setSelectedIcon(MenuIcons.FACE_SMILEY_PRESS);
-            addMouseListener(new FaceMouseListener());
-        }
+    public void increaseMines() {
+        int mines = Integer.parseInt(this.mines);
+        mines++;
+        this.mines = (mines < 9 ? "00" : "0") + mines;
+        setDigits();
+    }
 
-        public void flashEmotion(int emotion) {
-            switch(emotion) {//0 - Nervous, 1 = Dead, 2 = Cool
-                case 0:
-                    button.setIcon(MenuIcons.FACE_NERVOUS);
-                    break;
-                case 1:
-                    button.setIcon(MenuIcons.FACE_DEAD);
-                    break;
-                case 2:
-                    button.setIcon(MenuIcons.FACE_COOL);
-                    break;
-            }
-            System.out.println("Hello World!");
-            /*if(emotion == 0)
-                button.setIcon(MenuIcons.FACE_SMILEY);*/
-        }
-
-        private class FaceMouseListener extends MouseAdapter {
-            public void mousePressed(MouseEvent e) {
-                setIcon(MenuIcons.FACE_SMILEY_PRESS);
-            }
-            public void mouseReleased(MouseEvent e) {
-                setIcon(MenuIcons.FACE_SMILEY);
-            }
-        }
+    public void decreaseMines() {
+        int count = Integer.parseInt(mines.replaceFirst("^0+(?!$)", ""));
+        count--;
+        StringBuilder builder = new StringBuilder();
+        if(count < 0) {
+            builder.append(count > -10 ? "0" : "");
+        } else
+            builder.append(count < 10 ? "00" : "0");
+        builder.append(count);
+        this.mines = builder.toString();
+        setDigits();
     }
 
     /**
@@ -135,6 +141,53 @@ public class CounterPanel extends JPanel {
                 case '-': mineDigits[digit].setIcon(MenuIcons.COUNTER_DASH); break;
             }
             digit++;
+        }
+    }
+
+    private class FaceButton extends JButton {
+        public FaceButton() {
+            setFocusPainted(false);
+            setSize(26, 26);
+            setIcon(MenuIcons.FACE_SMILEY);
+            setSelectedIcon(MenuIcons.FACE_SMILEY_PRESS);
+            addMouseListener(new FaceMouseListener());
+            addActionListener((e) -> {
+                Application.get.createField();
+            });
+        }
+
+        public void flashEmotion(int emotion) {
+            thread = new Thread(() -> {
+                try {
+                    switch (emotion) {//0 - Nervous, 1 = Dead, 2 = Cool
+                        case 0:
+                            button.setIcon(MenuIcons.FACE_NERVOUS);
+                            break;
+                        case 1:
+                            button.setIcon(MenuIcons.FACE_DEAD);
+                            break;
+                        case 2:
+                            button.setIcon(MenuIcons.FACE_COOL);
+                            break;
+                    }
+                    if (emotion == 0) {
+                        Thread.sleep(100);
+                        button.setIcon(MenuIcons.FACE_SMILEY);
+                        completed = true;
+                    }
+                } catch (Exception ex) {
+                }
+            });
+            thread.start();
+        }
+
+        private class FaceMouseListener extends MouseAdapter {
+            public void mousePressed(MouseEvent e) {
+                setIcon(MenuIcons.FACE_SMILEY_PRESS);
+            }
+            public void mouseReleased(MouseEvent e) {
+                setIcon(MenuIcons.FACE_SMILEY);
+            }
         }
     }
 

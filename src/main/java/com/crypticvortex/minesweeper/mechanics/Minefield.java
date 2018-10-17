@@ -1,5 +1,6 @@
 package com.crypticvortex.minesweeper.mechanics;
 
+import com.crypticvortex.minesweeper.Application;
 import com.crypticvortex.minesweeper.menus.CounterPanel;
 import com.crypticvortex.minesweeper.menus.MenuIcons;
 
@@ -70,46 +71,35 @@ public class Minefield {
         }
     }
 
-    public void setTileMouseListener(int index, CounterPanel panel){
-        tiles[index].addMouseListener(new TileMouseListener(panel));
+    public void createTileMouseListener(int index){
+        tiles[index].addMouseListener(new TileMouseListener(Application.counter));
     }
 
     private class TileMouseListener implements MouseListener {
-        CounterPanel panel;
-        public TileMouseListener(CounterPanel panel){
-            super();
+        private CounterPanel panel;
+        public TileMouseListener(CounterPanel panel) {
             this.panel = panel;
-        }
-
-        @Override
-        public void mouseClicked(MouseEvent e) {
-
         }
 
         public void mousePressed(MouseEvent e) {
             Tile tile = (Tile) e.getSource();
             if (e.getButton() == MouseEvent.BUTTON3) {
-                plantFlag(tile.getId());
-                panel.updateFace(0);
+                FlagType old = tile.getFlagType();
+                if(plantFlag(tile.getId()))
+                    panel.decreaseMines();
+                else {
+                    if(old != FlagType.INVALID && old != FlagType.QUESTION)
+                        panel.increaseMines();
+                }
             }
             if (e.getButton() == MouseEvent.BUTTON2)
                 tile.cycleColor();
         }
 
-        @Override
-        public void mouseReleased(MouseEvent e) {
-
-        }
-
-        @Override
-        public void mouseEntered(MouseEvent e) {
-
-        }
-
-        @Override
-        public void mouseExited(MouseEvent e) {
-
-        }
+        @Override public void mouseClicked(MouseEvent e) {}
+        @Override public void mouseReleased(MouseEvent e) {}
+        @Override public void mouseEntered(MouseEvent e) {}
+        @Override public void mouseExited(MouseEvent e) {}
     }
 
         /**
@@ -236,7 +226,7 @@ public class Minefield {
         int nearbyMines = 0;
         for(Tile tile : getNearbyTiles(index)){
             if(tile.isMine())
-                ++nearbyMines;
+                nearbyMines++;
         }
         return nearbyMines;
     }
@@ -252,16 +242,6 @@ public class Minefield {
         }
         gameFinished = true;
         return true;
-    }
-
-    public int[] getNearbyTilesIndex(int index){
-        Tile[] nearbyTiles = getNearbyTiles(index);
-        int[] nearbyTilesIndex = new int[nearbyTiles.length];
-        for(int i = 0; i < nearbyTilesIndex.length; i++) {
-            nearbyTilesIndex[i] = getTileIndex(nearbyTiles[i]);
-        }
-
-        return nearbyTilesIndex;
     }
 
     private int getTileIndex(Tile tile) {
@@ -299,23 +279,30 @@ public class Minefield {
         return optimisedNearbyTiles;
     }
 
-    public void plantFlag(int index) {
+    public boolean plantFlag(int index) {
         if(gameFinished)
-            return;
+            return false;
 
         Tile tile = tiles[index];
         if(!tile.isShown()) {
             if (tile.getFlagType() == FlagType.INVALID) {
-                if(tile.setFlagType(FlagType.RED))
+                if(tile.setFlagType(FlagType.RED)) {
                     tile.setIcon(MenuIcons.FLAG_RED);
+                    return true;
+                }
             } else if (tile.getFlagType() == FlagType.RED) {
-                if(tile.setFlagType(FlagType.QUESTION))
+                if(tile.setFlagType(FlagType.QUESTION)) {
                     tile.setIcon(MenuIcons.FLAG_QUESTION);
+                    return false;
+                }
             } else if (tile.getFlagType() == FlagType.QUESTION) {
-                if(tile.setFlagType(FlagType.INVALID))
+                if(tile.setFlagType(FlagType.INVALID)) {
                     tile.setIcon(MenuIcons.DEFAULT);
+                    return false;
+                }
             }
         }
+        return false;
     }
 
     public void cycleTileFlagColor(int index){

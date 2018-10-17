@@ -37,7 +37,7 @@ public class GameScreen extends JPanel {
                 int index = field.getWidth() * y + x;
                 Tile tile = field.getTile(index);
                 tile.addActionListener(new TileClickListener());
-                field.setTileMouseListener(index, counter);
+                field.createTileMouseListener(index);
                 tile.setSize(16, 16);
                 if(x == field.getWidth() - 1)
                     add(tile, "wrap");
@@ -55,22 +55,6 @@ public class GameScreen extends JPanel {
             if(field.gameWon())
                 JOptionPane.showMessageDialog(null, "Game Won!");
         }
-    }
-
-    private class TileMouseListener implements MouseListener {
-        public void mousePressed(MouseEvent e) {
-            Tile tile = (Tile) e.getSource();
-            if(e.getButton() == MouseEvent.BUTTON3) {
-                field.plantFlag(tile.getId());
-            }
-            if(e.getButton() == MouseEvent.BUTTON2)
-                tile.cycleColor();
-        }
-
-        @Override public void mouseClicked(MouseEvent e) {}
-        @Override public void mouseReleased(MouseEvent e) {}
-        @Override public void mouseEntered(MouseEvent e) {}
-        @Override public void mouseExited(MouseEvent e) {}
     }
 
 }
