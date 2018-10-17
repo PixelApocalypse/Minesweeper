@@ -5,6 +5,7 @@ import com.crypticvortex.minesweeper.Application;
 import javax.swing.*;
 
 public class MenuIcons {
+    public static final ImageIcon EMPTY = getIcon(-1);
     public static final ImageIcon MINE = getIcon(0);
     public static final ImageIcon NUMBER_1 = getIcon(1);
     public static final ImageIcon NUMBER_2 = getIcon(2);
@@ -18,6 +19,9 @@ public class MenuIcons {
     private static ImageIcon getIcon(int file) {
         ImageIcon icon = null;
         switch(file) {
+            case -1: // EMPTY
+                icon = new ImageIcon(Application.class.getResource("/images/empty.png"));
+                break;
             case 0: // Mine
                 icon = new ImageIcon(Application.class.getResource("/images/mine.png"));
                 break;
