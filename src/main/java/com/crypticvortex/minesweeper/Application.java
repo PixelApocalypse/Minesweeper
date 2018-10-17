@@ -28,6 +28,7 @@ public class Application extends JFrame {
      *                       ---- CONTROLS ----
      * [✓] Left click to reveal a square.
      * [ ] Right click to place a flag to mark mine locations.
+     * [ ] Right click a flag to cycle it to a Question Mark, Right click that to remove it
      * [ ] Left + Right click on a revealed number with all mines marked to clear remaining adjacent squares.
      * [ ] Shift + Right Click to cycle flag color.
      * [ ] N to create a new game.
@@ -56,6 +57,10 @@ public class Application extends JFrame {
         setLocationRelativeTo(null);
         setLayout(new FlowLayout(FlowLayout.CENTER, 0, 0));
         setResizable(false);
+
+        try {
+            setIconImage(new ImageIcon(Application.class.getResource("/images/favicon.png")).getImage());
+        } catch (Exception ex) {}
 
         field = new Minefield(9, 9, 10); // Beginner
         field.populate();

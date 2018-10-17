@@ -15,11 +15,12 @@ import java.awt.event.ActionListener;
  * @author Jatboy
  */
 public class GameScreen extends JPanel {
+    private Minefield field;
     private JButton[] tiles;
 
     public GameScreen(Minefield field) {
-        //setLayout(new GridLayout(field.getWidth(), field.getHeight(), 0, 0 ));
-        setLayout(new MigLayout("", "[][]"));
+        this.field = field;
+        setLayout(new MigLayout("", "[16lp, fill]0", "[15lp, fill]0"));
         setBorder(BorderFactory.createLoweredBevelBorder());
 
         int size = field.getWidth() * field.getHeight();
@@ -29,7 +30,7 @@ public class GameScreen extends JPanel {
             for (int x = 0; x < field.getWidth(); x++) {
                 int index = field.getWidth() * y + x;
                 boolean isMine = field.getTile(index).isMine();
-                TileButton tile = new TileButton(field.getTile(index));
+                TileButton tile = new TileButton(field.getTile(index), index);
                 tile.addActionListener(new TileListener());
                 tile.setSize(16, 16);
                 tiles[Math.min(index, size)] = tile;
@@ -43,19 +44,36 @@ public class GameScreen extends JPanel {
 
     private class TileButton extends JButton {
         private Tile tile;
+        private int index;
 
-        public TileButton(Tile tile) {
+        public TileButton(Tile tile, int index) {
             setPreferredSize(new Dimension(16, 16));
             setMargin(new Insets(0,0, 0, 0));
-            setIcon(MenuIcons.EMPTY);
+            setIcon(MenuIcons.DEFAULT);
+            setFocusPainted(false);
             setBorder(BorderFactory.createEmptyBorder());
-            setSelectedIcon((tile.isMine() ? MenuIcons.MINE : MenuIcons.NUMBER_1));
             this.tile = tile;
         }
 
-        @Override
-        public void setDisabledIcon(Icon icon) {
-            return;
+        public void showTile() {
+            if(!tile.isShown()) {
+                int mines = field.getNearbyMines(index);
+                System.out.println("Nearby mines: " + mines);
+                /*switch(mines) {
+                    case 1: setIcon(MenuIcons.NUMBER_1); break;
+                    case 2: setIcon(MenuIcons.NUMBER_2); break;
+                    case 3: setIcon(MenuIcons.NUMBER_3); break;
+                    case 4: setIcon(MenuIcons.NUMBER_4); break;
+                    case 5: setIcon(MenuIcons.NUMBER_5); break;
+                    case 6: setIcon(MenuIcons.NUMBER_6); break;
+                    case 7: setIcon(MenuIcons.NUMBER_7); break;
+                    case 8: setIcon(MenuIcons.NUMBER_8); break;
+                    default:
+                        setIcon(MenuIcons.EMPTY);
+                        break;
+                }*/
+                tile.show();
+            }
         }
 
         public Tile getTile() {
@@ -66,14 +84,7 @@ public class GameScreen extends JPanel {
     private class TileListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             TileButton tile = (TileButton) e.getSource();
-            boolean isMine = tile.getTile().isMine();
-
-            if(isMine) {
-                //tile.setBackground(Color.RED);
-                tile.setIcon(MenuIcons.MINE);
-            } else {
-                tile.setIcon(MenuIcons.NUMBER_1);
-            }
+            tile.showTile();
         }
     }
 
