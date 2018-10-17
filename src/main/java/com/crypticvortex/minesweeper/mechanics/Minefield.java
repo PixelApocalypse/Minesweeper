@@ -28,6 +28,7 @@ public class Minefield {
         this.height = height;
         this.diff = diff;
         this.tiles = new Tile[width * height];
+        this.mineCount = 0;
     }
     /**
      * Create a new minefield with the given parameters:
@@ -45,11 +46,8 @@ public class Minefield {
      * @param mineCount Amount of mines.
      */
     public Minefield(int width, int height, int mineCount) {
-        this.width = width;
-        this.height = height;
+        this(width, height, Difficulty.CUSTOM);
         this.mineCount = mineCount;
-        this.diff = Difficulty.CUSTOM;
-        this.tiles = new Tile[width * height];
     }
 
     /**
@@ -68,7 +66,11 @@ public class Minefield {
      */
     private ArrayList<Integer> getMinesIndex(){
         Random random = new Random(this.seed);
-        int nbOfMines = Math.round(tiles.length * (MINE_PERCENT + diff.getAmount()) / 100);
+        int nbOfMines;
+        if(diff != Difficulty.CUSTOM)
+            nbOfMines = Math.round(tiles.length * (MINE_PERCENT + diff.getAmount()) / 100);
+        else
+            nbOfMines = mineCount;
         if(this.mineCount > 0)
             nbOfMines = mineCount;
         ArrayList<Integer> minesCoordinate = new ArrayList<>(nbOfMines);
@@ -107,11 +109,22 @@ public class Minefield {
      */
     public void showTile(int index) {
         Tile tile = tiles[index];
+        if(tile.getFlagType() != FlagType.INVALID)
+            return;
+
+        if(getNearbyMines(index) != 0 || tile.isMine())
+            showSingleTile(tile);
+
+        else
+            showMultipleTiles(tile);
+    }
+
+    private void showSingleTile(Tile tile){
         if(tile.showTile()) {
             if(tile.isMine()) {
                 tile.setIcon(MenuIcons.MINE_PRESSED);
             } else {
-                int mines = getNearbyMines(index);
+                int mines = getNearbyMines(getTileIndex(tile));
                 switch(mines) {
                     case 1: tile.setIcon(MenuIcons.NUMBER_1); break;
                     case 2: tile.setIcon(MenuIcons.NUMBER_2); break;
@@ -126,8 +139,28 @@ public class Minefield {
                         break;
                 }
             }
-
         }
+    }
+
+    private void showMultipleTiles(Tile source){
+
+        ArrayList<Tile> tilesToReveal = new ArrayList<>();
+        tilesToReveal.add(source);
+        ArrayList<Tile> tilesToCheck = new ArrayList<>();
+        tilesToCheck.add(source);
+
+        for(int i = 0; i < tilesToCheck.size(); i++){
+            for(Tile tile : getNearbyTiles(getTileIndex(tilesToCheck.get(i)))){
+                if(tilesToReveal.contains(tile))
+                    continue;
+                tilesToReveal.add(tile);
+                if(getNearbyMines(getTileIndex(tile)) == 0)
+                    tilesToCheck.add(tile);
+            }
+        }
+
+        for(Tile tile : tilesToReveal)
+            showSingleTile(tile);
     }
 
     /**
