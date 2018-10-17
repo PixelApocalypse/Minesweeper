@@ -144,6 +144,8 @@ public class DifficultyDialog extends JFrame {
             add(create);
             pack();
         }
+
+        setLocationRelativeTo(Application.get);
     }
 
     private class RangeVerifier extends InputVerifier {

@@ -1,5 +1,6 @@
 package com.crypticvortex.minesweeper.menus;
 
+import com.crypticvortex.minesweeper.Application;
 import com.crypticvortex.minesweeper.mechanics.Minefield;
 import com.crypticvortex.minesweeper.mechanics.Tile;
 import net.miginfocom.layout.AC;
@@ -50,12 +51,12 @@ public class GameScreen extends JPanel {
             counter.updateFace(0);
             if (!tile.isMine()) {
                 if (field.gameWon())
-                    JOptionPane.showMessageDialog(null, "Game Won!");
+                    JOptionPane.showMessageDialog(Application.get, "Game Won!");
             } else {
                 for(int i : field.getMineCoordinates())
                     if(!field.getTile(i).equals(tile))
                     field.showTile(i, false);
-                JOptionPane.showMessageDialog(null, "Game Over! Click the face to restart.");
+                JOptionPane.showMessageDialog(Application.get, "Game Over! Click the face to restart.");
             }
         }
     }
