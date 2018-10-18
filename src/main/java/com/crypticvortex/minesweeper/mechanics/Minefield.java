@@ -78,8 +78,8 @@ public class Minefield {
             nbOfMines = Math.round(tiles.length * (MINE_PERCENT + DifficultyDialog.mines_percent) / 100);
         } else
             nbOfMines = mineCount;
-        if(this.mineCount > 0)
-            nbOfMines = mineCount;
+        if(nbOfMines < 1)
+            nbOfMines = 1;
         ArrayList<Integer> minesCoordinate = new ArrayList<>(nbOfMines);
 
         for(int i = 0; i < nbOfMines; i++) {
