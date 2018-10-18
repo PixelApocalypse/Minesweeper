@@ -78,7 +78,6 @@ public class CounterPanel extends JPanel {
                 try{
                     if(!isTimerCounting){
                         isTimerWaiting = true;
-                        System.out.println("Timer stopped");
                         do{
                             Thread.sleep(TIMER_UPDATE_RATE);
                         } while(!isTimerCounting);
@@ -86,7 +85,6 @@ public class CounterPanel extends JPanel {
                         timeSinceLastSecond = 0;
                         totalTime = 0;
                         lastUpdate = System.currentTimeMillis();
-                        System.out.println("Timer started");
                     }
                     Thread.sleep(TIMER_UPDATE_RATE);
                     timeSinceLastSecond += (int) System.currentTimeMillis() - lastUpdate;
@@ -121,7 +119,7 @@ public class CounterPanel extends JPanel {
     public boolean isTimerCounting() { return isTimerCounting; }
 
     public void startTimer(){
-        while(!isTimerWaiting) {System.out.println("Waiting for timer to be ready to start.");}
+        while(!isTimerWaiting) {}
         isTimerCounting = true;
     }
 
