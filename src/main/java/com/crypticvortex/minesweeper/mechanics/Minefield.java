@@ -68,14 +68,6 @@ public class Minefield {
     }
 
     /**
-     * Registers the mouse listener for each Tile.
-     * @param index Coordinate of target tile.
-     */
-    public void createTileMouseListener(int index){
-        tiles[index].addMouseListener(new TileMouseListener(Application.counter));
-    }
-
-    /**
      * Creates and returns the index of all mines.
      * @return List of mine coordinates
      */
@@ -127,10 +119,9 @@ public class Minefield {
         if(getNearbyMines(index) != 0 || tile.isMine()) {
             showSingleTile(tile, pressed);
             return tile.isMine();
-        }
-
-        else
+        } else
             showMultipleTiles(tile);
+
         return false;
     }
 
@@ -144,17 +135,7 @@ public class Minefield {
                 gameFinished = true;
             } else {
                 int mines = getNearbyMines(tile.getId());
-                switch(mines) {
-                    case 1: tile.setIcon(MenuIcons.NUMBER_1); break;
-                    case 2: tile.setIcon(MenuIcons.NUMBER_2); break;
-                    case 3: tile.setIcon(MenuIcons.NUMBER_3); break;
-                    case 4: tile.setIcon(MenuIcons.NUMBER_4); break;
-                    case 5: tile.setIcon(MenuIcons.NUMBER_5); break;
-                    case 6: tile.setIcon(MenuIcons.NUMBER_6); break;
-                    case 7: tile.setIcon(MenuIcons.NUMBER_7); break;
-                    case 8: tile.setIcon(MenuIcons.NUMBER_8); break;
-                    default: tile.setIcon(MenuIcons.EMPTY); break;
-                }
+                tile.setIcon(MenuIcons.getIconFrom(mines));
             }
         }
     }
@@ -261,6 +242,14 @@ public class Minefield {
             }
         }
         return false;
+    }
+
+    /**
+     * Registers the mouse listener for each Tile.
+     * @param index Coordinate of target tile.
+     */
+    public void createTileMouseListener(int index){
+        tiles[index].addMouseListener(new TileMouseListener(Application.counter));
     }
 
     public void cycleTileFlagColor(int index){

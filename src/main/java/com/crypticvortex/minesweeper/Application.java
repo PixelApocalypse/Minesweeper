@@ -25,6 +25,8 @@ public class Application extends JFrame {
     private GameScreen screen;
     private Difficulty currentDiff;
 
+    private int startX = 0, startY = 0;
+
     public Application() {
         super("Minesweeper");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -32,6 +34,9 @@ public class Application extends JFrame {
         setLocationRelativeTo(null);
         setLayout(new MigLayout());
         setResizable(false);
+
+        startX = getX();
+        startY = getY();
 
         try {
             setIconImage(new ImageIcon(Application.class.getResource("/images/favicon.png")).getImage());
@@ -115,24 +120,10 @@ public class Application extends JFrame {
         } catch(Exception ex){
 
         }
-        switch(currentDiff) {
-            case BEGINNER:
-                field = new Minefield(9, 9, 10);
-                break;
-            case INTERMEDIATE:
-                field = new Minefield(16, 16, 40);
-                break;
-            case EXPERT:
-                field = new Minefield(30, 30, 99);
-                break;
-            case CUSTOM:
-                field = new Minefield(DifficultyDialog.width, DifficultyDialog.height, DifficultyDialog.mines);
-                break;
-            case EXPERIMENTAL:
-                field = new Minefield(DifficultyDialog.width, DifficultyDialog.height, Difficulty.EXPERIMENTAL);
-                break;
-        }
-
+        field = new Minefield(
+                (currentDiff == Difficulty.CUSTOM) || (currentDiff == Difficulty.EXPERIMENTAL) ? DifficultyDialog.width : currentDiff.getColumns(),
+                (currentDiff == Difficulty.CUSTOM) || (currentDiff == Difficulty.EXPERIMENTAL) ? DifficultyDialog.height : currentDiff.getRows(),
+                (currentDiff == Difficulty.CUSTOM) || (currentDiff == Difficulty.EXPERIMENTAL) ? DifficultyDialog.mines : currentDiff.getMines());
         field.populate();
         remove(screen);
         screen = new GameScreen(field, counter);
@@ -140,7 +131,6 @@ public class Application extends JFrame {
         counter.setField(field);
         counter.setDigits();
         pack();
-        setLocationRelativeTo(null);
     }
 
     /**
