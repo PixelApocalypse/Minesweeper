@@ -9,7 +9,7 @@ import com.crypticvortex.minesweeper.menus.DifficultyDialog;
  * @author Caraibe8
  */
 public enum Difficulty {
-    BEGINNER     (8, 8, 10),
+    BEGINNER     (9, 9, 10),
     INTERMEDIATE (16, 16, 40),
     EXPERT       (30, 30, 99),
     CUSTOM       (0, 0, 0),

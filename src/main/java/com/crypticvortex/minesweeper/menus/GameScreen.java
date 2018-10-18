@@ -61,7 +61,6 @@ public class GameScreen extends JPanel {
                     JOptionPane.showMessageDialog(Application.get, "Game Won!");
                 }
             } else if (tile.isMine() && tile.getFlagType() == FlagType.INVALID) {
-
                 for(int i : field.getMineCoordinates())
                     if(!field.getTile(i).equals(tile))
                     field.showTile(i, false);

@@ -47,8 +47,7 @@ public class Tile extends JButton {
                 if(index == flagType.values().length)
                     index = 2;
                 FlagType next = FlagType.values()[index];
-                if(setFlagType(next))
-                    setIcon(next.getIcon());
+                setFlagType(next);
             }
     }
 
@@ -87,6 +86,7 @@ public class Tile extends JButton {
     public boolean setFlagType(FlagType flagType) {
         if(!isDiscovered) {
             this.flagType = flagType;
+            setIcon(flagType.getIcon());
             return true;
         }
         return false;

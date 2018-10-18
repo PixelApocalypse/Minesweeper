@@ -36,8 +36,6 @@ public class CounterPanel extends JPanel {
 
 
     public CounterPanel(Minefield field) {
-
-
         this.field = field;
 
         setLayout(new MigLayout(new LC().insets("10", "5", "10", "5").gridGap("0", "0")));

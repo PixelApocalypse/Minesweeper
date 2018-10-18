@@ -225,20 +225,14 @@ public class Minefield {
         Tile tile = tiles[index];
         if(!tile.isShown()) {
             if (tile.getFlagType() == FlagType.INVALID) {
-                if(tile.setFlagType(FlagType.RED)) {
-                    tile.setIcon(MenuIcons.FLAG_RED);
-                    return true;
-                }
-            } else if (tile.getFlagType() == FlagType.RED) {
-                if(tile.setFlagType(FlagType.QUESTION)) {
-                    tile.setIcon(MenuIcons.FLAG_QUESTION);
-                    return false;
-                }
+                tile.setFlagType(FlagType.RED);
+                return true;
+            } else if (tile.getFlagType() != FlagType.QUESTION) {
+                tile.setFlagType(FlagType.QUESTION);
+                return false;
             } else if (tile.getFlagType() == FlagType.QUESTION) {
-                if(tile.setFlagType(FlagType.INVALID)) {
-                    tile.setIcon(MenuIcons.DEFAULT);
-                    return false;
-                }
+                tile.setFlagType(FlagType.INVALID);
+                return false;
             }
         }
         return false;
