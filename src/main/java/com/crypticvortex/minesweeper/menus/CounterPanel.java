@@ -150,11 +150,15 @@ public class CounterPanel extends JPanel {
         int count = Integer.parseInt(mines.replaceFirst("^0+(?!$)", ""));
         count++;
         StringBuilder builder = new StringBuilder();
-        if(count < 0) {
-            builder.append(count > -10 ? "0" : "");
-        } else
-            builder.append(count < 10 ? "00" : "0");
-        builder.append(count);
+        if(count > 0) {
+            builder.append((count < 10 ? "00" : "0"));
+            builder.append(count);
+        } else if(count > -10) {
+            builder.append("-0" + Math.abs(count));
+        } else if(count < -10) {
+            builder.append("-" + Math.abs(count));
+        }else if(count < -100) {builder.append(count);}
+        this.mines = builder.toString();
         this.mines = builder.toString();
         setDigits();
     }
@@ -166,11 +170,14 @@ public class CounterPanel extends JPanel {
         int count = Integer.parseInt(mines.replaceFirst("^0+(?!$)", ""));
         count--;
         StringBuilder builder = new StringBuilder();
-        if(count < 0) {
-            builder.append(count > -10 ? "0" : "");
-        } else
-            builder.append(count < 10 ? "00" : "0");
-        builder.append(count);
+        if(count > 0) {
+            builder.append((count < 10 ? "00" : "0"));
+            builder.append(count);
+        } else if(count > -10) {
+            builder.append("-0" + Math.abs(count));
+        } else if(count < -10) {
+            builder.append("-" + Math.abs(count));
+        }else if(count < -100) {builder.append(count);}
         this.mines = builder.toString();
         setDigits();
     }
