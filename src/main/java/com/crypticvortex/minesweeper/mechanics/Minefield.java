@@ -33,9 +33,10 @@ public class Minefield {
      * @param diff the amount of mines depends on the difficulty
      */
     public Minefield(int width, int height, Difficulty diff){
-        if(width < 2 || height < 2)
-            throw new IllegalArgumentException();
-
+        if(width < 2)
+            width = 2;
+        if(height < 2)
+            height = 2;
         this.seed = new Random().nextInt();
         this.width = width;
         this.height = height;
