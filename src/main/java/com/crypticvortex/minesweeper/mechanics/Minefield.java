@@ -12,7 +12,10 @@ import java.util.List;
 import java.util.Random;
 
 /**
- * Stores primary game data.
+ * Stores primary game data
+ *
+ * @author Caraibe8
+ * @author Jatboy
  */
 public class Minefield {
     private int seed;
@@ -77,9 +80,9 @@ public class Minefield {
             nbOfMines = Math.round(tiles.length * ((float) (DifficultyDialog.mines) / 100));
         } else
             nbOfMines = mineCount;
+        if(nbOfMines < 1)
+            nbOfMines = 1;
         mineCount = nbOfMines;
-        if(mineCount < 1)
-            throw new IllegalArgumentException("mineCount is less than 1!");
 
         ArrayList<Integer> minesCoordinate = new ArrayList<>(nbOfMines);
         for(int i = 0; i < nbOfMines; i++) {
