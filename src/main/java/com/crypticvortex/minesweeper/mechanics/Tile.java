@@ -5,6 +5,7 @@ import com.crypticvortex.minesweeper.menus.MenuIcons;
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
+import java.util.Arrays;
 
 /**
  * Individual tile data.
@@ -41,8 +42,14 @@ public class Tile extends JButton {
      */
     public void cycleColor() {
         if(!isDiscovered)
-            if (flagType != FlagType.INVALID)
-                setIcon(flagType.getIcon());
+            if (flagType != FlagType.INVALID) {
+                int index = Arrays.asList(FlagType.values()).indexOf(flagType) + 1;
+                if(index == flagType.values().length)
+                    index = 2;
+                FlagType next = FlagType.values()[index];
+                if(setFlagType(next))
+                    setIcon(next.getIcon());
+            }
     }
 
     public int getId() {
