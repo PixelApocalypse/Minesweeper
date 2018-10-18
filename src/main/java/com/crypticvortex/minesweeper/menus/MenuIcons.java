@@ -54,6 +54,20 @@ public class MenuIcons {
     public static final ImageIcon NUMBER_7      = getIcon("7.png");
     public static final ImageIcon NUMBER_8      = getIcon("8.png");
 
+    public static ImageIcon getIconFrom(int number) {
+        switch(number) {
+            case 1: return NUMBER_1;
+            case 2: return NUMBER_2;
+            case 3: return NUMBER_3;
+            case 4: return NUMBER_4;
+            case 5: return NUMBER_5;
+            case 6: return NUMBER_6;
+            case 7: return NUMBER_7;
+            case 8: return NUMBER_8;
+            default: return EMPTY;
+        }
+    }
+
     /**
      * Retrieves an icon from the local classpath.
      * @param file Index of the file to retrieve.

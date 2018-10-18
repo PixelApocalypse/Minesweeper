@@ -9,20 +9,28 @@ import com.crypticvortex.minesweeper.menus.DifficultyDialog;
  * @author Caraibe8
  */
 public enum Difficulty {
-    BEGINNER     (-10.0f),
-    INTERMEDIATE (-0.0f),
-    EXPERT       (-10.0f),
-    CUSTOM       (0),
-    EXPERIMENTAL (0); // TODO : Refer to Application design comment
+    BEGINNER     (8, 8, 10),
+    INTERMEDIATE (16, 16, 40),
+    EXPERT       (30, 30, 99),
+    CUSTOM       (0, 0, 0),
+    EXPERIMENTAL (0, 0, 0); // TODO : Refer to Application design comment
 
-    private float amount;
-
-    Difficulty(float amount) {
-        this.amount = amount;
+    private int columns, rows, mines;
+    Difficulty(int columns, int rows, int mines) {
+        this.columns = columns;
+        this.rows = rows;
+        this.mines = mines;
     }
 
-    public float getAmount() {
-        return amount;
+    public int getColumns() {
+        return columns;
     }
 
+    public int getRows() {
+        return rows;
+    }
+
+    public int getMines() {
+        return mines;
+    }
 }
