@@ -11,6 +11,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.sql.Time;
 import java.sql.Timestamp;
+import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -30,7 +31,7 @@ public class CounterPanel extends JPanel {
     private boolean isTimerWaiting;
     private boolean isTimerCounting;
     private FaceButton button;
-    private String score, mines;
+    private int score, mines;
     private JLabel[] mineDigits;
     private JLabel[] scoreDigits;
 
@@ -61,9 +62,8 @@ public class CounterPanel extends JPanel {
         for(int s = 0; s < scoreDigits.length; s++)
             add(scoreDigits[s], "cell " + (5 + s) + " 0");
 
-        score = "000";
-        int mineCount = field.getMineCount();
-        mines = (mineCount < 100 ? "0" : "") + mineCount;
+        score = 0;
+        mines = field.getMineCount();
         setDigits();
 
         isTimerCounting = false;
@@ -96,10 +96,7 @@ public class CounterPanel extends JPanel {
                             totalTime = 999;
                     }
 
-                    if(totalTime < 100)
-                        this.score = (totalTime < 10 ? "00" : "0") + Math.min(totalTime, 999);
-                    else
-                        this.score = "" + Math.min(totalTime, 999);
+                    this.score = Math.min(totalTime, 999);
                     setDigits();
                     if (thread != null) {
                         if (completed) {
@@ -142,24 +139,12 @@ public class CounterPanel extends JPanel {
     public void setField(Minefield field) {
         this.field = field;
         int mineCount = this.field.getMineCount();
-        mines = (mineCount < 100 ? "0" : "") + mineCount;
+        mines = mineCount;
         setDigits();
     }
 
     public void increaseMines() {
-        int count = Integer.parseInt(mines.replaceFirst("^0+(?!$)", ""));
-        count++;
-        StringBuilder builder = new StringBuilder();
-        if(count > 0) {
-            builder.append((count < 10 ? "00" : "0"));
-            builder.append(count);
-        } else if(count > -10) {
-            builder.append("-0" + Math.abs(count));
-        } else if(count < -10) {
-            builder.append("-" + Math.abs(count));
-        }else if(count < -100) {builder.append(count);}
-        this.mines = builder.toString();
-        this.mines = builder.toString();
+        mines++;
         setDigits();
     }
 
@@ -167,18 +152,7 @@ public class CounterPanel extends JPanel {
      * Decrease the number of mines the counter displays.
      */
     public void decreaseMines() {
-        int count = Integer.parseInt(mines.replaceFirst("^0+(?!$)", ""));
-        count--;
-        StringBuilder builder = new StringBuilder();
-        if(count > 0) {
-            builder.append((count < 10 ? "00" : "0"));
-            builder.append(count);
-        } else if(count > -10) {
-            builder.append("-0" + Math.abs(count));
-        } else if(count < -10) {
-            builder.append("-" + Math.abs(count));
-        }else if(count < -100) {builder.append(count);}
-        this.mines = builder.toString();
+        mines--;
         setDigits();
     }
 
@@ -187,6 +161,7 @@ public class CounterPanel extends JPanel {
      */
     public void setDigits() {
         int sDigit = 0;
+        String score = String.format("%03o", this.score);
         for(char c : score.toCharArray()) {
             switch(c) {
                 case '0': scoreDigits[sDigit].setIcon(MenuIcons.COUNTER_0); break;
@@ -205,8 +180,7 @@ public class CounterPanel extends JPanel {
         }
 
         int digit = 0;
-        if(Integer.parseInt(mines) > 999)
-            mines = "999";
+        String mines = String.format("%03d", this.mines);
         for(char c : mines.toCharArray()) {
             switch(c) {
                 case '0': mineDigits[digit].setIcon(MenuIcons.COUNTER_0); break;
@@ -233,7 +207,7 @@ public class CounterPanel extends JPanel {
             setSelectedIcon(MenuIcons.FACE_SMILEY_PRESS);
             addMouseListener(new FaceMouseListener());
             addActionListener((e) -> {
-                score = "000";
+                score = 0;
                 setDigits();
                 Application.get.createField();
             });
