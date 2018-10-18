@@ -8,7 +8,6 @@ import com.crypticvortex.minesweeper.menus.MenuIcons;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -49,8 +48,8 @@ public class Minefield {
      * @param height Row count.
      * @param mineCount Amount of mines.
      */
-    public Minefield(int width, int height, int mineCount) {
-        this(width, height, Difficulty.CUSTOM);
+    public Minefield(int width, int height, int mineCount, Difficulty diff) {
+        this(width, height, diff);
         if(mineCount < 1)
             throw new IllegalArgumentException();
         this.mineCount = mineCount;
@@ -75,13 +74,14 @@ public class Minefield {
         Random random = new Random(this.seed);
         int nbOfMines;
         if(diff == Difficulty.EXPERIMENTAL) {
-            nbOfMines = Math.round(tiles.length * (MINE_PERCENT + DifficultyDialog.mines_percent) / 100);
+            nbOfMines = Math.round(tiles.length * ((float) (DifficultyDialog.mines) / 100));
         } else
             nbOfMines = mineCount;
-        if(this.mineCount > 0)
-            nbOfMines = mineCount;
-        ArrayList<Integer> minesCoordinate = new ArrayList<>(nbOfMines);
+        mineCount = nbOfMines;
+        if(mineCount < 1)
+            throw new IllegalArgumentException("mineCount is less than 1!");
 
+        ArrayList<Integer> minesCoordinate = new ArrayList<>(nbOfMines);
         for(int i = 0; i < nbOfMines; i++) {
             int mineLocation = random.nextInt(tiles.length);
             if (minesCoordinate.contains(mineLocation)) {

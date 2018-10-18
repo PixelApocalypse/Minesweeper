@@ -42,7 +42,7 @@ public class Application extends JFrame {
             setIconImage(new ImageIcon(Application.class.getResource("/images/favicon.png")).getImage());
         } catch (Exception ex) {}
 
-        field = new Minefield(9, 9, 10); // Beginner
+        field = new Minefield(9, 9, 10, Difficulty.BEGINNER); // Beginner
         field.populate();
 
         createMenuBar();
@@ -121,9 +121,10 @@ public class Application extends JFrame {
 
         }
         field = new Minefield(
-                (currentDiff == Difficulty.CUSTOM) || (currentDiff == Difficulty.EXPERIMENTAL) ? DifficultyDialog.width : currentDiff.getColumns(),
-                (currentDiff == Difficulty.CUSTOM) || (currentDiff == Difficulty.EXPERIMENTAL) ? DifficultyDialog.height : currentDiff.getRows(),
-                (currentDiff == Difficulty.CUSTOM) || (currentDiff == Difficulty.EXPERIMENTAL) ? DifficultyDialog.mines : currentDiff.getMines());
+                ((currentDiff == Difficulty.CUSTOM) || (currentDiff == Difficulty.EXPERIMENTAL)) ? DifficultyDialog.width : currentDiff.getColumns(),
+                ((currentDiff == Difficulty.CUSTOM) || (currentDiff == Difficulty.EXPERIMENTAL)) ? DifficultyDialog.height : currentDiff.getRows(),
+                ((currentDiff == Difficulty.CUSTOM) || (currentDiff == Difficulty.EXPERIMENTAL)) ? DifficultyDialog.mines : currentDiff.getMines(),
+                currentDiff);
         field.populate();
         remove(screen);
         screen = new GameScreen(field, counter);

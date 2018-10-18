@@ -202,7 +202,7 @@ public class CounterPanel extends JPanel {
         int digit = 0;
         if(Integer.parseInt(mines) > 999)
             mines = "999";
-        for(char c : mines.substring(0, 3).toCharArray()) {
+        for(char c : mines.toCharArray()) {
             switch(c) {
                 case '0': mineDigits[digit].setIcon(MenuIcons.COUNTER_0); break;
                 case '1': mineDigits[digit].setIcon(MenuIcons.COUNTER_1); break;
