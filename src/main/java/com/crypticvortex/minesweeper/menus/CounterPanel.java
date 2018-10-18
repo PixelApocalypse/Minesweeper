@@ -21,12 +21,13 @@ import java.time.LocalTime;
  * @author Jatboy
  */
 public class CounterPanel extends JPanel {
+    private final int TIMER_UPDATE_RATE = 250;
+
     private Thread timer;
     private Thread thread;
     private Minefield field;
     private boolean completed;
-    private boolean stopCounting;
-    private boolean timerStarted;
+    private boolean isTimerWaiting;
     private boolean isTimerCounting;
     private FaceButton button;
     private String score, mines;
@@ -66,21 +67,30 @@ public class CounterPanel extends JPanel {
         int mineCount = field.getMineCount();
         mines = (mineCount < 100 ? "0" : "") + mineCount;
         setDigits();
-        isTimerCounting = false;
-    }
 
-    private void createTimer(){
-        timerStarted = false;
-        stopCounting = false;
-        timer = new Thread(() -> {
-            timerStarted = true;
-            long lastUpdate = System.currentTimeMillis();
+        isTimerCounting = false;
+        isTimerWaiting = true;
+
+        new Thread(() -> {
             int timeSinceLastSecond = 0;
             int totalTime = 0;
-            while(!stopCounting){
-                isTimerCounting = true;
+            long lastUpdate = System.currentTimeMillis();
+
+            while(true){
                 try{
-                    Thread.sleep(250);
+                    if(!isTimerCounting){
+                        isTimerWaiting = true;
+                        System.out.println("Timer stopped");
+                        do{
+                            Thread.sleep(TIMER_UPDATE_RATE);
+                        } while(!isTimerCounting);
+                        isTimerWaiting = false;
+                        timeSinceLastSecond = 0;
+                        totalTime = 0;
+                        lastUpdate = System.currentTimeMillis();
+                        System.out.println("Timer started");
+                    }
+                    Thread.sleep(TIMER_UPDATE_RATE);
                     timeSinceLastSecond += (int) System.currentTimeMillis() - lastUpdate;
                     while(timeSinceLastSecond % 1000 >= 0) {
                         totalTime += 1;
@@ -96,29 +106,22 @@ public class CounterPanel extends JPanel {
                         }
                     }
                     lastUpdate = System.currentTimeMillis();
-                } catch(Exception ex) {
+                } catch(Exception ex){
                     System.out.println(ex);
                 }
             }
-            timerStarted = false;
-            isTimerCounting = false;
-
-        });
-        timer.start();
+        }).start();
     }
 
-    public boolean isTimerStarted() { return timerStarted; }
+    public boolean isTimerCounting() { return isTimerCounting; }
 
     public void startTimer(){
-        createTimer();
-        while(!isTimerCounting) {}
+        while(!isTimerWaiting) {System.out.println("Waiting for timer to be ready to start.");}
+        isTimerCounting = true;
     }
 
     public void stopTimer(){
-        stopCounting = true;
-        while(timer.getState() != Thread.State.TERMINATED) {
-        }
-        System.out.println("Timer done counting");
+        isTimerCounting = false;
     }
 
     /**

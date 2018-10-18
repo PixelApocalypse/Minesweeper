@@ -49,7 +49,7 @@ public class GameScreen extends JPanel {
 
     private class TileClickListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-            if(!counter.isTimerStarted() && !isGameFinished)
+            if(!counter.isTimerCounting() && !isGameFinished)
                 counter.startTimer();
             Tile tile = (Tile) e.getSource();
             field.showTile(tile.getId(), true);
