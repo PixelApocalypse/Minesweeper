@@ -92,11 +92,18 @@ public class CounterPanel extends JPanel {
                     }
                     Thread.sleep(TIMER_UPDATE_RATE);
                     timeSinceLastSecond += (int) System.currentTimeMillis() - lastUpdate;
-                    while(timeSinceLastSecond % 1000 >= 0) {
+
+                    while(timeSinceLastSecond >= 1000) {
                         totalTime += 1;
                         timeSinceLastSecond -= 1000;
+                        if(totalTime > 999)
+                            totalTime = 999;
                     }
-                    this.score = (totalTime < 10 ? "00" : "0") + Math.min(totalTime, 999);
+
+                    if(totalTime < 100)
+                        this.score = (totalTime < 10 ? "00" : "0") + Math.min(totalTime, 999);
+                    else
+                        this.score = "" + Math.min(totalTime, 999);
                     setDigits();
                     if (thread != null) {
                         if (completed) {
