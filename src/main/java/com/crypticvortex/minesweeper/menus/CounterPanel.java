@@ -2,12 +2,18 @@ package com.crypticvortex.minesweeper.menus;
 
 import com.crypticvortex.minesweeper.Application;
 import com.crypticvortex.minesweeper.mechanics.Minefield;
+import javafx.concurrent.Worker;
 import net.miginfocom.layout.LC;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.sql.Time;
+import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 /**
  * Display area for Mine counter and Score counter.
@@ -15,15 +21,22 @@ import java.awt.event.*;
  * @author Jatboy
  */
 public class CounterPanel extends JPanel {
+    private Thread timer;
     private Thread thread;
     private Minefield field;
     private boolean completed;
+    private boolean stopCounting;
+    private boolean timerStarted;
+    private boolean isTimerCounting;
     private FaceButton button;
     private String score, mines;
     private JLabel[] mineDigits;
     private JLabel[] scoreDigits;
 
+
     public CounterPanel(Minefield field) {
+
+
         this.field = field;
 
         setLayout(new MigLayout(new LC().insets("10", "5", "10", "5").gridGap("0", "0")));
@@ -53,14 +66,27 @@ public class CounterPanel extends JPanel {
         int mineCount = field.getMineCount();
         mines = (mineCount < 100 ? "0" : "") + mineCount;
         setDigits();
+        isTimerCounting = false;
+    }
 
-        new Thread(() -> {
-            while(true) {
-                try {
-                    Thread.sleep(1000);
-                    int score = Integer.parseInt(this.score);
-                    score++;
-                    this.score = (score < 10 ? "00" : "0") + Math.min(score, 999);
+    private void createTimer(){
+        timerStarted = false;
+        stopCounting = false;
+        timer = new Thread(() -> {
+            timerStarted = true;
+            long lastUpdate = System.currentTimeMillis();
+            int timeSinceLastSecond = 0;
+            int totalTime = 0;
+            while(!stopCounting){
+                isTimerCounting = true;
+                try{
+                    Thread.sleep(250);
+                    timeSinceLastSecond += (int) System.currentTimeMillis() - lastUpdate;
+                    while(timeSinceLastSecond % 1000 >= 0) {
+                        totalTime += 1;
+                        timeSinceLastSecond -= 1000;
+                    }
+                    this.score = (totalTime < 10 ? "00" : "0") + Math.min(totalTime, 999);
                     setDigits();
                     if (thread != null) {
                         if (completed) {
@@ -69,9 +95,30 @@ public class CounterPanel extends JPanel {
                             thread = null;
                         }
                     }
-                } catch (Exception ex) {}
+                    lastUpdate = System.currentTimeMillis();
+                } catch(Exception ex) {
+                    System.out.println(ex);
+                }
             }
-        }).start();
+            timerStarted = false;
+            isTimerCounting = false;
+
+        });
+        timer.start();
+    }
+
+    public boolean isTimerStarted() { return timerStarted; }
+
+    public void startTimer(){
+        createTimer();
+        while(!isTimerCounting) {}
+    }
+
+    public void stopTimer(){
+        stopCounting = true;
+        while(timer.getState() != Thread.State.TERMINATED) {
+        }
+        System.out.println("Timer done counting");
     }
 
     /**

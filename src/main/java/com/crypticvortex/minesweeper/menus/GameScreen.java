@@ -20,10 +20,12 @@ import java.awt.event.ActionListener;
 public class GameScreen extends JPanel {
     private Minefield field;
     private CounterPanel counter;
+    private boolean isGameFinished;
 
     public GameScreen(Minefield field, CounterPanel counter) {
         this.field = field;
         this.counter = counter;
+        this.isGameFinished = false;
         setLayout(new MigLayout(new LC().insets("0").align("center", "center").gridGap("0", "0"), new AC().size("16p")));
         setBorder(BorderFactory.createLoweredBevelBorder());
 
@@ -47,16 +49,24 @@ public class GameScreen extends JPanel {
 
     private class TileClickListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
+            if(!counter.isTimerStarted() && !isGameFinished)
+                counter.startTimer();
             Tile tile = (Tile) e.getSource();
             field.showTile(tile.getId(), true);
             counter.updateFace(0);
             if (!tile.isMine()) {
-                if (field.gameWon())
+                if (field.gameWon()) {
+                    counter.stopTimer();
+                    isGameFinished = true;
                     JOptionPane.showMessageDialog(Application.get, "Game Won!");
-            } else if (tile.isMine()) {
+                }
+            } else if (tile.isMine() && tile.getFlagType() == FlagType.INVALID) {
+
                 for(int i : field.getMineCoordinates())
                     if(!field.getTile(i).equals(tile))
                     field.showTile(i, false);
+                counter.stopTimer();
+                isGameFinished = true;
                 JOptionPane.showMessageDialog(Application.get, "Game Over! Click the face to restart.");
             }
         }

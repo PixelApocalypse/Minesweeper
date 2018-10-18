@@ -109,6 +109,12 @@ public class Application extends JFrame {
     }
 
     public void createField() {
+        try{
+
+            counter.stopTimer();
+        } catch(Exception ex){
+
+        }
         switch(currentDiff) {
             case BEGINNER:
                 field = new Minefield(9, 9, 10);
