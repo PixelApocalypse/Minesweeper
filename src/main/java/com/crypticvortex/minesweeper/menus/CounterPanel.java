@@ -162,6 +162,8 @@ public class CounterPanel extends JPanel {
     public void setDigits() {
         int sDigit = 0;
         String score = String.format("%03o", this.score);
+        if(score.length() > 3)
+            score = score.substring(0, 3);
         for(char c : score.toCharArray()) {
             switch(c) {
                 case '0': scoreDigits[sDigit].setIcon(MenuIcons.COUNTER_0); break;
@@ -181,6 +183,8 @@ public class CounterPanel extends JPanel {
 
         int digit = 0;
         String mines = String.format("%03d", this.mines);
+        if(mines.length() > 3)
+            mines = mines.substring(0, 3);
         for(char c : mines.toCharArray()) {
             switch(c) {
                 case '0': mineDigits[digit].setIcon(MenuIcons.COUNTER_0); break;
