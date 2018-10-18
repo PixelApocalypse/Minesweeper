@@ -132,6 +132,8 @@ public class Application extends JFrame {
         counter.setField(field);
         counter.setDigits();
         pack();
+        if(currentDiff == Difficulty.EXPERIMENTAL || currentDiff == Difficulty.CUSTOM)
+            setLocationRelativeTo(null);
     }
 
     /**
