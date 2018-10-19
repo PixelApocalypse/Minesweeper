@@ -182,7 +182,7 @@ public class CounterPanel extends JPanel {
         }
 
         int digit = 0;
-        String mines = String.format("%03d", this.mines);
+        String mines = String.format("%03d", ((this.mines <= -100 && this.mines < 0) ? -99 : this.mines));
         if(mines.length() > 3)
             mines = mines.substring(0, 3);
         for(char c : mines.toCharArray()) {

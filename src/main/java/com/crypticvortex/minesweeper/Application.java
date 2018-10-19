@@ -67,6 +67,7 @@ public class Application extends JFrame {
                 createField();
             }
         });
+        newGame.setAccelerator(KeyStroke.getKeyStroke('N', Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
         gameMenu.add(newGame);
         gameMenu.addSeparator();
 
