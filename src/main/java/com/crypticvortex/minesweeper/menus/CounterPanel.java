@@ -2,19 +2,12 @@ package com.crypticvortex.minesweeper.menus;
 
 import com.crypticvortex.minesweeper.Application;
 import com.crypticvortex.minesweeper.mechanics.Minefield;
-import javafx.concurrent.Worker;
 import net.miginfocom.layout.LC;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.sql.Time;
-import java.sql.Timestamp;
-import java.text.DecimalFormat;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 
 /**
  * Display area for Mine counter and Score counter.
@@ -22,19 +15,17 @@ import java.time.LocalTime;
  * @author Jatboy
  */
 public class CounterPanel extends JPanel {
-    private final int TIMER_UPDATE_RATE = 250;
-
-    private Thread timer;
+    //private Thread timer;
     private Thread thread;
     private Minefield field;
     private boolean completed;
-    private boolean isTimerWaiting;
-    private boolean isTimerCounting;
-    private FaceButton button;
     private int score, mines;
+    private FaceButton button;
     private JLabel[] mineDigits;
     private JLabel[] scoreDigits;
-
+    private boolean isTimerWaiting;
+    private boolean isTimerCounting;
+    private final int TIMER_UPDATE_RATE = 250;
 
     public CounterPanel(Minefield field) {
         this.field = field;
@@ -56,8 +47,16 @@ public class CounterPanel extends JPanel {
             add(mineDigits[m], (m == mineDigits.length - 1 ? "gapright 20, cell " + m + " 0" : "cell " + m + " 0"));
 
         button = new FaceButton();
-        button.setPreferredSize(new Dimension(26, 26));
-        add(button, "w 26!, h 26!, gapright 20");
+        int btnSize = 26;
+        switch(field.getScale()) {
+            case DEFAULT:
+                btnSize = 26;
+                break;
+            case TIMES_2:
+                btnSize *= 2;
+                break;
+        }
+        add(button, "w " + btnSize + "!, h " + btnSize + "!, gapright 20, cell 4 0");
 
         for(int s = 0; s < scoreDigits.length; s++)
             add(scoreDigits[s], "cell " + (5 + s) + " 0");
@@ -113,7 +112,20 @@ public class CounterPanel extends JPanel {
         }).start();
     }
 
-    public boolean isTimerCounting() { return isTimerCounting; }
+    public void resetButton() {
+        remove(button);
+        button.resetSize();
+        int btnSize = 26;
+        switch(field.getScale()) {
+            case DEFAULT:
+                btnSize = 26;
+                break;
+            case TIMES_2:
+                btnSize *= 2;
+                break;
+        }
+        add(button, "w " + btnSize + "!, h " + btnSize + "!, gapright 20, cell 4 0");
+    }
 
     public void startTimer(){
         while(!isTimerWaiting) {}
@@ -129,7 +141,7 @@ public class CounterPanel extends JPanel {
      * @param emotion Numerical value of desired face.
      */
     public void updateFace(int emotion) {
-        button.flashEmotion(emotion);
+        button.setEmotion(emotion);
     }
 
     /**
@@ -165,19 +177,21 @@ public class CounterPanel extends JPanel {
         if(score.length() > 3)
             score = score.substring(0, 3);
         for(char c : score.toCharArray()) {
+            String icon = "";
             switch(c) {
-                case '0': scoreDigits[sDigit].setIcon(MenuIcons.COUNTER_0); break;
-                case '1': scoreDigits[sDigit].setIcon(MenuIcons.COUNTER_1); break;
-                case '2': scoreDigits[sDigit].setIcon(MenuIcons.COUNTER_2); break;
-                case '3': scoreDigits[sDigit].setIcon(MenuIcons.COUNTER_3); break;
-                case '4': scoreDigits[sDigit].setIcon(MenuIcons.COUNTER_4); break;
-                case '5': scoreDigits[sDigit].setIcon(MenuIcons.COUNTER_5); break;
-                case '6': scoreDigits[sDigit].setIcon(MenuIcons.COUNTER_6); break;
-                case '7': scoreDigits[sDigit].setIcon(MenuIcons.COUNTER_7); break;
-                case '8': scoreDigits[sDigit].setIcon(MenuIcons.COUNTER_8); break;
-                case '9': scoreDigits[sDigit].setIcon(MenuIcons.COUNTER_9); break;
-                case '-': scoreDigits[sDigit].setIcon(MenuIcons.COUNTER_DASH); break;
+                case '0': icon = MenuIcons.COUNTER_0; break;
+                case '1': icon = MenuIcons.COUNTER_1; break;
+                case '2': icon = MenuIcons.COUNTER_2; break;
+                case '3': icon = MenuIcons.COUNTER_3; break;
+                case '4': icon = MenuIcons.COUNTER_4; break;
+                case '5': icon = MenuIcons.COUNTER_5; break;
+                case '6': icon = MenuIcons.COUNTER_6; break;
+                case '7': icon = MenuIcons.COUNTER_7; break;
+                case '8': icon = MenuIcons.COUNTER_8; break;
+                case '9': icon = MenuIcons.COUNTER_9; break;
+                case '-': icon = MenuIcons.COUNTER_DASH; break;
             }
+            scoreDigits[sDigit].setIcon(MenuIcons.getScaledIcon(field.getScale(), icon));
             sDigit++;
         }
 
@@ -186,29 +200,33 @@ public class CounterPanel extends JPanel {
         if(mines.length() > 3)
             mines = mines.substring(0, 3);
         for(char c : mines.toCharArray()) {
+            String icon = "";
             switch(c) {
-                case '0': mineDigits[digit].setIcon(MenuIcons.COUNTER_0); break;
-                case '1': mineDigits[digit].setIcon(MenuIcons.COUNTER_1); break;
-                case '2': mineDigits[digit].setIcon(MenuIcons.COUNTER_2); break;
-                case '3': mineDigits[digit].setIcon(MenuIcons.COUNTER_3); break;
-                case '4': mineDigits[digit].setIcon(MenuIcons.COUNTER_4); break;
-                case '5': mineDigits[digit].setIcon(MenuIcons.COUNTER_5); break;
-                case '6': mineDigits[digit].setIcon(MenuIcons.COUNTER_6); break;
-                case '7': mineDigits[digit].setIcon(MenuIcons.COUNTER_7); break;
-                case '8': mineDigits[digit].setIcon(MenuIcons.COUNTER_8); break;
-                case '9': mineDigits[digit].setIcon(MenuIcons.COUNTER_9); break;
-                case '-': mineDigits[digit].setIcon(MenuIcons.COUNTER_DASH); break;
+                case '0': icon = MenuIcons.COUNTER_0; break;
+                case '1': icon = MenuIcons.COUNTER_1; break;
+                case '2': icon = MenuIcons.COUNTER_2; break;
+                case '3': icon = MenuIcons.COUNTER_3; break;
+                case '4': icon = MenuIcons.COUNTER_4; break;
+                case '5': icon = MenuIcons.COUNTER_5; break;
+                case '6': icon = MenuIcons.COUNTER_6; break;
+                case '7': icon = MenuIcons.COUNTER_7; break;
+                case '8': icon = MenuIcons.COUNTER_8; break;
+                case '9': icon = MenuIcons.COUNTER_9; break;
+                case '-': icon = MenuIcons.COUNTER_DASH; break;
             }
+            mineDigits[digit].setIcon(MenuIcons.getScaledIcon(field.getScale(), icon));
             digit++;
         }
+    }
+
+    public boolean isTimerCounting() {
+        return isTimerCounting;
     }
 
     private class FaceButton extends JButton {
         public FaceButton() {
             setFocusPainted(false);
-            setSize(26, 26);
-            setIcon(MenuIcons.FACE_SMILEY);
-            setSelectedIcon(MenuIcons.FACE_SMILEY_PRESS);
+            setIcon(MenuIcons.getScaledIcon(field.getScale(), MenuIcons.FACE_SMILEY));
             addMouseListener(new FaceMouseListener());
             addActionListener((e) -> {
                 score = 0;
@@ -217,23 +235,27 @@ public class CounterPanel extends JPanel {
             });
         }
 
-        public void flashEmotion(int emotion) {
+        public void resetSize() {
+            setIcon(MenuIcons.getScaledIcon(field.getScale(), MenuIcons.FACE_SMILEY));
+        }
+
+        public void setEmotion(int emotion) {
             thread = new Thread(() -> {
                 try {
                     switch (emotion) {//0 - Nervous, 1 = Dead, 2 = Cool
                         case 0:
-                            button.setIcon(MenuIcons.FACE_NERVOUS);
+                            button.setIcon(MenuIcons.getScaledIcon(field.getScale(), MenuIcons.FACE_NERVOUS));
                             break;
                         case 1:
-                            button.setIcon(MenuIcons.FACE_DEAD);
+                            button.setIcon(MenuIcons.getScaledIcon(field.getScale(), MenuIcons.FACE_DEAD));
                             break;
                         case 2:
-                            button.setIcon(MenuIcons.FACE_COOL);
+                            button.setIcon(MenuIcons.getScaledIcon(field.getScale(), MenuIcons.FACE_COOL));
                             break;
                     }
                     if (emotion == 0) {
                         Thread.sleep(100);
-                        button.setIcon(MenuIcons.FACE_SMILEY);
+                        button.setIcon(MenuIcons.getScaledIcon(field.getScale(), MenuIcons.FACE_SMILEY));
                         completed = true;
                     }
                 } catch (Exception ex) {
@@ -244,10 +266,10 @@ public class CounterPanel extends JPanel {
 
         private class FaceMouseListener extends MouseAdapter {
             public void mousePressed(MouseEvent e) {
-                setIcon(MenuIcons.FACE_SMILEY_PRESS);
+                setIcon(MenuIcons.getScaledIcon(field.getScale(), MenuIcons.FACE_SMILEY_PRESS));
             }
             public void mouseReleased(MouseEvent e) {
-                setIcon(MenuIcons.FACE_SMILEY);
+                setIcon(MenuIcons.getScaledIcon(field.getScale(), MenuIcons.FACE_SMILEY));
             }
         }
     }
