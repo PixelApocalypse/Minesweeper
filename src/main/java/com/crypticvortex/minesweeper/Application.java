@@ -25,8 +25,6 @@ public class Application extends JFrame {
     private GameScreen screen;
     private Difficulty currentDiff;
 
-    private int startX = 0, startY = 0;
-
     public Application() {
         super("Minesweeper");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -34,9 +32,6 @@ public class Application extends JFrame {
         setLocationRelativeTo(null);
         setLayout(new MigLayout());
         setResizable(false);
-
-        startX = getX();
-        startY = getY();
 
         try {
             setIconImage(new ImageIcon(Application.class.getResource("/images/favicon.png")).getImage());
@@ -116,11 +111,8 @@ public class Application extends JFrame {
 
     public void createField() {
         try{
-
             counter.stopTimer();
-        } catch(Exception ex){
-
-        }
+        } catch(Exception ex){}
         field = new Minefield(
                 ((currentDiff == Difficulty.CUSTOM) || (currentDiff == Difficulty.EXPERIMENTAL)) ? DifficultyDialog.width : currentDiff.getColumns(),
                 ((currentDiff == Difficulty.CUSTOM) || (currentDiff == Difficulty.EXPERIMENTAL)) ? DifficultyDialog.height : currentDiff.getRows(),
