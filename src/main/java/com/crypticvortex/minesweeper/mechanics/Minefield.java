@@ -263,6 +263,10 @@ public class Minefield {
         return scale;
     }
 
+    public Difficulty getDifficulty() {
+        return diff;
+    }
+
     private class TileMouseListener implements MouseListener {
         private CounterPanel panel;
         public TileMouseListener(CounterPanel panel) {

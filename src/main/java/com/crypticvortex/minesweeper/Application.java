@@ -12,7 +12,6 @@ import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
-import java.util.logging.Logger;
 
 /**
  * Application window.
@@ -24,6 +23,7 @@ public class Application extends JFrame {
     private GameScale scale;
     private GameScreen screen;
     private Difficulty currentDiff;
+    private JScrollPane gameScreen;
 
     public Application() {
         super("Minesweeper");
@@ -47,7 +47,8 @@ public class Application extends JFrame {
         add(counter, "center, wrap");
 
         screen = new GameScreen(field, counter);
-        add(screen, "center");
+        gameScreen = new JScrollPane(screen);
+        add(gameScreen, "center");
         pack();
 
         get = this;
@@ -131,29 +132,28 @@ public class Application extends JFrame {
         } catch(Exception ex){}
         field = new Minefield(currentDiff, scale);
         field.populate();
-        remove(screen);
+        remove(gameScreen);
         screen = new GameScreen(field, counter);
-        add(screen, "center");
+        gameScreen = new JScrollPane(screen);
+
+        if(field.getScale() == GameScale.TIMES_2) {
+            if (field.getWidth() > 30 || field.getHeight() > 30)
+                add(gameScreen, "w 800!, h 800!, center");
+            else if (field.getDifficulty() == Difficulty.EXPERT)
+                add(gameScreen, "w 800!, h 800!, center");
+            else
+                add(gameScreen, "center");
+        } else
+             add(gameScreen, "center");
+
         counter.setField(field);
         counter.resetButton();
         counter.setDigits();
         pack();
         if(currentDiff == Difficulty.EXPERIMENTAL || currentDiff == Difficulty.CUSTOM)
             setLocationRelativeTo(null);
-    }
-
-    /**
-     * @return Local minefield variable.
-     */
-    public Minefield getMinefield() {
-        return field;
-    }
-
-    /**
-     * @return Application's main logger.
-     */
-    public static Logger getLogger() {
-        return logger;
+        if(currentDiff == Difficulty.EXPERT && field.getScale() == GameScale.TIMES_2)
+            setLocationRelativeTo(null);
     }
 
     public static void main(String[] args) {
@@ -214,5 +214,4 @@ public class Application extends JFrame {
     public static Application get;
     public static CounterPanel counter;
     private static final long serialVersionUID = -1L;
-    private static final Logger logger = Logger.getLogger("Minesweeper");
 }
