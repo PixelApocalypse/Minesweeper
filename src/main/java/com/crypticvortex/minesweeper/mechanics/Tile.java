@@ -15,6 +15,7 @@ import java.util.Arrays;
  */
 public class Tile extends JButton {
     private int id;
+    private GameScale scale;
     private FlagType flagType;
     private boolean isDiscovered, isMine;
     private final Border empty = BorderFactory.createEmptyBorder();
@@ -24,15 +25,16 @@ public class Tile extends JButton {
      * @param id of the tile
      * @param isMine if the tile should be considered as a mine
      */
-    public Tile(int id, boolean isMine) {
+    public Tile(int id, boolean isMine, GameScale scale) {
         this.id = id;
+        this.scale = scale;
         this.isMine = isMine;
         this.isDiscovered = false;
         flagType = FlagType.INVALID;
 
         setPreferredSize(new Dimension(16, 16));
         setMargin(new Insets(0,0, 0, 0));
-        setIcon(MenuIcons.DEFAULT);
+        setIcon(MenuIcons.getScaledIcon(scale, MenuIcons.DEFAULT));
         setFocusPainted(false);
         setBorder(empty);
     }
@@ -86,7 +88,7 @@ public class Tile extends JButton {
     public boolean setFlagType(FlagType flagType) {
         if(!isDiscovered) {
             this.flagType = flagType;
-            setIcon(flagType.getIcon());
+            setIcon(MenuIcons.getScaledIcon(scale, flagType.getIconPath()));
             return true;
         }
         return false;

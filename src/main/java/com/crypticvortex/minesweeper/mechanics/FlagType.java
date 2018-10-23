@@ -21,12 +21,12 @@ public enum FlagType {
     BLACK(FLAG_BLACK),
     GRAY(FLAG_GRAY);
 
-    private ImageIcon icon;
-    FlagType(ImageIcon icon) {
-        this.icon = icon;
+    private String iconPath;
+    FlagType(String iconPath) {
+        this.iconPath = iconPath;
     }
 
-    public ImageIcon getIcon() {
-        return icon;
+    public String getIconPath() {
+        return iconPath;
     }
 }

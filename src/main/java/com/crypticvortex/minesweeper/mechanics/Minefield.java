@@ -20,43 +20,30 @@ import java.util.Random;
 public class Minefield {
     private int seed;
     private Tile[] tiles;
+    private GameScale scale;
     private Difficulty diff;
     private boolean gameFinished;
     private int width, height, mineCount;
-    private float MINE_PERCENT = 20f;
     private List<Integer> mineCoordinates;
 
     /**
      * Create a new minefield with the given parameters:
-     * @param width the width of the minefield
-     * @param height the height of them minefield
-     * @param diff the amount of mines depends on the difficulty
+     * @param diff the difficulty of the minefield.
+     * @param scale the scale of the minefield images.
      */
-    public Minefield(int width, int height, Difficulty diff){
-        if(width < 2)
-            width = 2;
-        if(height < 2)
-            height = 2;
+    public Minefield(Difficulty diff, GameScale scale) {
         this.seed = new Random().nextInt();
-        this.width = width;
-        this.height = height;
         this.diff = diff;
-        this.tiles = new Tile[width * height];
-        this.mineCount = 0;
-        this.gameFinished = false;
-    }
+        this.scale = scale;
 
-    /**
-     * Create a new minefield with the given parameters:
-     * @param width Column count.
-     * @param height Row count.
-     * @param mineCount Amount of mines.
-     */
-    public Minefield(int width, int height, int mineCount, Difficulty diff) {
-        this(width, height, diff);
-        if(mineCount < 1)
-            throw new IllegalArgumentException();
-        this.mineCount = mineCount;
+        this.width = ((diff == Difficulty.CUSTOM) || (diff == Difficulty.EXPERIMENTAL)) ? DifficultyDialog.width : diff.getColumns();
+        this.height = ((diff == Difficulty.CUSTOM) || (diff == Difficulty.EXPERIMENTAL)) ? DifficultyDialog.height : diff.getRows();
+        this.mineCount = ((diff == Difficulty.CUSTOM) || (diff == Difficulty.EXPERIMENTAL)) ? DifficultyDialog.mines : diff.getMines();
+        if(width < 2) width = 2;
+        if(height < 2) height = 2;
+        if(mineCount < 1) mineCount = 1;
+
+        this.tiles = new Tile[width * height];
     }
 
     /**
@@ -66,7 +53,7 @@ public class Minefield {
         this.mineCoordinates = null;
         createMines();
         for(int i = 0; i < width * height; ++i){
-            tiles[i] = new Tile(i, mineCoordinates.contains(i));
+            tiles[i] = new Tile(i, mineCoordinates.contains(i), scale);
         }
     }
 
@@ -138,13 +125,13 @@ public class Minefield {
         if(tile.showTile()) {
             if(tile.isMine()) {
                 if(pressed)
-                    tile.setIcon(MenuIcons.MINE_PRESSED);
+                    tile.setIcon(MenuIcons.getScaledIcon(scale, MenuIcons.MINE_PRESSED));
                 else
-                    tile.setIcon(MenuIcons.MINE);
+                    tile.setIcon(MenuIcons.getScaledIcon(scale, MenuIcons.MINE));
                 gameFinished = true;
             } else {
                 int mines = getNearbyMines(tile.getId());
-                tile.setIcon(MenuIcons.getIconFrom(mines));
+                tile.setIcon(MenuIcons.getIconFrom(scale, mines));
             }
         }
     }
@@ -278,16 +265,20 @@ public class Minefield {
         return height;
     }
 
-    public Difficulty getDifficulty() {
-        return diff;
-    }
-
     public List<Integer> getMineCoordinates() {
         return mineCoordinates;
     }
 
     public int getMineCount() {
         return mineCoordinates.size();
+    }
+
+    public GameScale getScale() {
+        return scale;
+    }
+
+    public Difficulty getDifficulty() {
+        return diff;
     }
 
     private class TileMouseListener implements MouseListener {

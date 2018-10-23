@@ -1,6 +1,7 @@
 package com.crypticvortex.minesweeper;
 
 import com.crypticvortex.minesweeper.mechanics.Difficulty;
+import com.crypticvortex.minesweeper.mechanics.GameScale;
 import com.crypticvortex.minesweeper.mechanics.Minefield;
 import com.crypticvortex.minesweeper.menus.CounterPanel;
 import com.crypticvortex.minesweeper.menus.DifficultyDialog;
@@ -11,9 +12,6 @@ import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.logging.Logger;
 
 /**
  * Application window.
@@ -22,10 +20,10 @@ import java.util.logging.Logger;
  */
 public class Application extends JFrame {
     private Minefield field;
+    private GameScale scale;
     private GameScreen screen;
     private Difficulty currentDiff;
-
-    private int startX = 0, startY = 0;
+    private JScrollPane gameScreen;
 
     public Application() {
         super("Minesweeper");
@@ -35,14 +33,12 @@ public class Application extends JFrame {
         setLayout(new MigLayout());
         setResizable(false);
 
-        startX = getX();
-        startY = getY();
-
         try {
             setIconImage(new ImageIcon(Application.class.getResource("/images/favicon.png")).getImage());
         } catch (Exception ex) {}
 
-        field = new Minefield(9, 9, 10, Difficulty.BEGINNER); // Beginner
+        scale = GameScale.DEFAULT;
+        field = new Minefield(Difficulty.BEGINNER, scale);
         field.populate();
 
         createMenuBar();
@@ -51,7 +47,8 @@ public class Application extends JFrame {
         add(counter, "center, wrap");
 
         screen = new GameScreen(field, counter);
-        add(screen, "center");
+        gameScreen = new JScrollPane(screen);
+        add(gameScreen, "center");
         pack();
 
         get = this;
@@ -59,18 +56,19 @@ public class Application extends JFrame {
 
     private void createMenuBar() {
         JMenuBar menuBar = new JMenuBar();
+
+        // ---- Game Menu ---- \\
         JMenu gameMenu = new JMenu("Game");
 
         JMenuItem newGame = new JMenuItem("New Game");
-        newGame.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                createField();
-            }
+        newGame.addActionListener((e) -> {
+            createField();
         });
+        newGame.setAccelerator(KeyStroke.getKeyStroke('N', Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
         gameMenu.add(newGame);
         gameMenu.addSeparator();
 
-        // ---- Difficulties ----
+        // ---- Difficulties ---- \\
         JCheckBoxMenuItem beginner = new JCheckBoxMenuItem("Beginner");
         JCheckBoxMenuItem intermediate = new JCheckBoxMenuItem("Intermediate");
         JCheckBoxMenuItem expert = new JCheckBoxMenuItem("Expert");
@@ -107,47 +105,55 @@ public class Application extends JFrame {
         });
         experimental.setAccelerator(KeyStroke.getKeyStroke('X', Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
         gameMenu.add(experimental);
-        // ---- End Difficulties ----
-
+        // ---- End Difficulties ---- \\
+        // ---- End Game Menu ----\\
         menuBar.add(gameMenu);
+
+        // ---- Scale Menu ---- \\
+        JMenu scaleMenu = new JMenu("Scale");
+        JCheckBoxMenuItem scaleX1 = new JCheckBoxMenuItem("Default");
+        JCheckBoxMenuItem scaleX2 = new JCheckBoxMenuItem("Scale x2");
+
+        scaleX1.setState(true);
+        scaleX1.addChangeListener(new ScaleListener(scaleX1, scaleX2));
+        scaleX2.addChangeListener(new ScaleListener(scaleX1, scaleX2));
+
+        scaleMenu.add(scaleX1);
+        scaleMenu.add(scaleX2);
+        // ---- End Scale Menu ---- \\
+        menuBar.add(scaleMenu);
+
         setJMenuBar(menuBar);
     }
 
     public void createField() {
         try{
-
             counter.stopTimer();
-        } catch(Exception ex){
-
-        }
-        field = new Minefield(
-                ((currentDiff == Difficulty.CUSTOM) || (currentDiff == Difficulty.EXPERIMENTAL)) ? DifficultyDialog.width : currentDiff.getColumns(),
-                ((currentDiff == Difficulty.CUSTOM) || (currentDiff == Difficulty.EXPERIMENTAL)) ? DifficultyDialog.height : currentDiff.getRows(),
-                ((currentDiff == Difficulty.CUSTOM) || (currentDiff == Difficulty.EXPERIMENTAL)) ? DifficultyDialog.mines : currentDiff.getMines(),
-                currentDiff);
+        } catch(Exception ex){}
+        field = new Minefield(currentDiff, scale);
         field.populate();
-        remove(screen);
+        remove(gameScreen);
         screen = new GameScreen(field, counter);
-        add(screen, "center");
+        gameScreen = new JScrollPane(screen);
+
+        if(field.getScale() == GameScale.TIMES_2) {
+            if (field.getWidth() > 30 || field.getHeight() > 30)
+                add(gameScreen, "w 800!, h 800!, center");
+            else if (field.getDifficulty() == Difficulty.EXPERT)
+                add(gameScreen, "w 800!, h 800!, center");
+            else
+                add(gameScreen, "center");
+        } else
+             add(gameScreen, "center");
+
         counter.setField(field);
+        counter.resetButton();
         counter.setDigits();
         pack();
         if(currentDiff == Difficulty.EXPERIMENTAL || currentDiff == Difficulty.CUSTOM)
             setLocationRelativeTo(null);
-    }
-
-    /**
-     * @return Local minefield variable.
-     */
-    public Minefield getMinefield() {
-        return field;
-    }
-
-    /**
-     * @return Application's main logger.
-     */
-    public static Logger getLogger() {
-        return logger;
+        if(currentDiff == Difficulty.EXPERT && field.getScale() == GameScale.TIMES_2)
+            setLocationRelativeTo(null);
     }
 
     public static void main(String[] args) {
@@ -186,8 +192,26 @@ public class Application extends JFrame {
         }
     }
 
+    private class ScaleListener implements ChangeListener {
+        private JCheckBoxMenuItem item1, item2;
+
+        public ScaleListener(JCheckBoxMenuItem item1, JCheckBoxMenuItem item2) {
+            this.item1 = item1;
+            this.item2 = item2;
+        }
+
+        public void stateChanged(ChangeEvent e) {
+            if(e.getSource() == item1 && item1.isSelected()) {
+                item2.setSelected(false);
+                scale = GameScale.DEFAULT;
+            } else if(e.getSource() == item2 && item2.isSelected()) {
+                item1.setSelected(false);
+                scale = GameScale.TIMES_2;
+            }
+        }
+    }
+
     public static Application get;
     public static CounterPanel counter;
     private static final long serialVersionUID = -1L;
-    private static final Logger logger = Logger.getLogger("Minesweeper");
 }
