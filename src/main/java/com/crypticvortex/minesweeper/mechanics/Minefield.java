@@ -97,7 +97,7 @@ public class Minefield {
     /**
      * Shows the tile at the given index.
      * @param index of the tile to show
-     * @return if the tile was successfully shown
+     * @return true if a mine was shown
      */
     public boolean showTile(int index, boolean pressed) {
         Tile tile = tiles[index];
@@ -108,9 +108,13 @@ public class Minefield {
             return false;
 
         if(tile.isShown() && getNearbyMines(index) == getNearbyFlags(index)) {
-            for(Tile _tile : getNearbyTiles(index))
-                if(!_tile.isShown())
-                showTile(_tile.getId(), true);
+            boolean mineRevealed = false;
+            for(Tile _tile : getNearbyTiles(index)) {
+                if (!_tile.isShown())
+                    if(showTile(_tile.getId(), true))
+                        mineRevealed = true;
+            }
+            return true;
         }
         if(getNearbyMines(index) != 0 || tile.isMine()) {
             showSingleTile(tile, pressed);

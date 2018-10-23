@@ -59,10 +59,10 @@ public class GameScreen extends JPanel {
             if(!counter.isTimerCounting() && !isGameFinished)
                 counter.startTimer();
             Tile tile = (Tile) e.getSource();
-            field.showTile(tile.getId(), true);
+            boolean minePressed = field.showTile(tile.getId(), true);
             counter.updateFace(0);
             if(!isGameFinished) {
-                if (!tile.isMine()) {
+                if (!minePressed) {
                     if (field.gameWon()) {
                         counter.stopTimer();
                         for (int i : field.getMineCoordinates())
@@ -71,7 +71,7 @@ public class GameScreen extends JPanel {
                         isGameFinished = true;
                         JOptionPane.showMessageDialog(Application.get, "Game Won!");
                     }
-                } else if (tile.isMine() && tile.getFlagType() == FlagType.INVALID) {
+                } else if (minePressed && tile.getFlagType() == FlagType.INVALID) {
                     counter.stopTimer();
                     for (int i : field.getMineCoordinates())
                         if (!field.getTile(i).equals(tile))
