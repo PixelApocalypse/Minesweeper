@@ -4,6 +4,7 @@ import com.crypticvortex.minesweeper.Application;
 import com.crypticvortex.minesweeper.menus.CounterPanel;
 import com.crypticvortex.minesweeper.menus.DifficultyDialog;
 import com.crypticvortex.minesweeper.menus.MenuIcons;
+import com.crypticvortex.minesweeper.menus.PanelLoading;
 
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -49,11 +50,16 @@ public class Minefield {
     /**
      * Generates tiles and put them in the minefield.
      */
-    public void populate() {
+    public void populate(boolean firstRun) {
         this.mineCoordinates = null;
         createMines();
+        if(!firstRun)
+            PanelLoading.show(tiles.length);
         for(int i = 0; i < width * height; ++i){
             tiles[i] = new Tile(i, mineCoordinates.contains(i), scale);
+            if(!firstRun)
+                PanelLoading.increment(0 /* Generating tiles */);
+            System.out.println(i + "/" + tiles.length);
         }
     }
 

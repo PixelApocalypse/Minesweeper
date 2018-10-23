@@ -24,6 +24,7 @@ public class Application extends JFrame {
     private GameScreen screen;
     private Difficulty currentDiff;
     private JScrollPane gameScreen;
+    private boolean firstRun = true;
 
     public Application() {
         super("Minesweeper");
@@ -39,7 +40,7 @@ public class Application extends JFrame {
 
         scale = GameScale.DEFAULT;
         field = new Minefield(Difficulty.BEGINNER, scale);
-        field.populate();
+        field.populate(true);
 
         createMenuBar();
 
@@ -131,7 +132,7 @@ public class Application extends JFrame {
             counter.stopTimer();
         } catch(Exception ex){}
         field = new Minefield(currentDiff, scale);
-        field.populate();
+        field.populate(false);
         remove(gameScreen);
 
         screen = new GameScreen(field, counter);
