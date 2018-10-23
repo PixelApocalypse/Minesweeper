@@ -61,19 +61,24 @@ public class GameScreen extends JPanel {
             Tile tile = (Tile) e.getSource();
             field.showTile(tile.getId(), true);
             counter.updateFace(0);
-            if (!tile.isMine()) {
-                if (field.gameWon()) {
+            if(!isGameFinished) {
+                if (!tile.isMine()) {
+                    if (field.gameWon()) {
+                        counter.stopTimer();
+                        for (int i : field.getMineCoordinates())
+                            if (!field.getTile(i).equals(tile))
+                                field.showTile(i, false);
+                        isGameFinished = true;
+                        JOptionPane.showMessageDialog(Application.get, "Game Won!");
+                    }
+                } else if (tile.isMine() && tile.getFlagType() == FlagType.INVALID) {
                     counter.stopTimer();
+                    for (int i : field.getMineCoordinates())
+                        if (!field.getTile(i).equals(tile))
+                            field.showTile(i, false);
                     isGameFinished = true;
-                    JOptionPane.showMessageDialog(Application.get, "Game Won!");
+                    JOptionPane.showMessageDialog(Application.get, "Game Over! Click the face to restart.");
                 }
-            } else if (tile.isMine() && tile.getFlagType() == FlagType.INVALID) {
-                for(int i : field.getMineCoordinates())
-                    if(!field.getTile(i).equals(tile))
-                    field.showTile(i, false);
-                counter.stopTimer();
-                isGameFinished = true;
-                JOptionPane.showMessageDialog(Application.get, "Game Over! Click the face to restart.");
             }
         }
     }

@@ -101,8 +101,8 @@ public class Minefield {
      */
     public boolean showTile(int index, boolean pressed) {
         Tile tile = tiles[index];
-        if(gameFinished && !tile.isMine())
-            return true;
+        if(gameFinished && pressed)
+            return false;
 
         if(tile.getFlagType() != FlagType.INVALID)
             return false;
@@ -294,7 +294,7 @@ public class Minefield {
                 if(plantFlag(tile.getId()))
                     panel.decreaseMines();
                 else {
-                    if(old != FlagType.INVALID && old != FlagType.QUESTION)
+                    if(old != FlagType.INVALID && old != FlagType.QUESTION && !gameFinished)
                         panel.increaseMines();
                 }
             }
