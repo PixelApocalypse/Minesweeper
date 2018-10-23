@@ -120,6 +120,11 @@ public class Minefield {
         if(tile.getFlagType() != FlagType.INVALID)
             return false;
 
+        if(tile.isShown() && getNearbyMines(index) == getNearbyFlags(index)) {
+            for(Tile _tile : getNearbyTiles(index))
+                if(!_tile.isShown())
+                showTile(_tile.getId(), true);
+        }
         if(getNearbyMines(index) != 0 || tile.isMine()) {
             showSingleTile(tile, pressed);
             return tile.isMine();
@@ -176,6 +181,15 @@ public class Minefield {
                 nearbyMines++;
         }
         return nearbyMines;
+    }
+
+    public int getNearbyFlags(int index){
+        int nearbyFlags = 0;
+        for(Tile tile : getNearbyTiles(index)){
+            if(tile.getFlagType() != FlagType.INVALID)
+                ++nearbyFlags;
+        }
+        return nearbyFlags;
     }
 
     /**
