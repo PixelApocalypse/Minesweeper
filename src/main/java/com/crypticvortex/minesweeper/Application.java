@@ -133,23 +133,30 @@ public class Application extends JFrame {
         field = new Minefield(currentDiff, scale);
         field.populate();
         remove(gameScreen);
+
         screen = new GameScreen(field, counter);
         gameScreen = new JScrollPane(screen);
-
-        if(field.getScale() == GameScale.TIMES_2) {
-            if (field.getWidth() > 30 || field.getHeight() > 30)
-                add(gameScreen, "w 800!, h 800!, center");
-            else if (field.getDifficulty() == Difficulty.EXPERT)
-                add(gameScreen, "w 800!, h 800!, center");
-            else
-                add(gameScreen, "center");
-        } else
-             add(gameScreen, "center");
+        add(gameScreen, "center");
 
         counter.setField(field);
         counter.resetButton();
         counter.setDigits();
         pack();
+        System.out.println("Windows size : " + getSize().width + "x" + getSize().height);
+        Dimension finalDimension = new Dimension();
+        Dimension screenDimension = Toolkit.getDefaultToolkit().getScreenSize();
+        if(getSize().height > screenDimension.height)
+            finalDimension.height = screenDimension.height;
+        else
+            finalDimension.height = getSize().height;
+        if(getSize().width > screenDimension.width)
+            finalDimension.width = screenDimension.width;
+        else
+            finalDimension.width = getSize().width;
+        setSize(finalDimension);
+        System.out.println("Screen size : " + screenDimension.width + "x" + screenDimension.height);
+        System.out.println("Windows size : " + getSize().width + "x" + getSize().height);
+
         if(currentDiff == Difficulty.EXPERIMENTAL || currentDiff == Difficulty.CUSTOM)
             setLocationRelativeTo(null);
         if(currentDiff == Difficulty.EXPERT && field.getScale() == GameScale.TIMES_2)
