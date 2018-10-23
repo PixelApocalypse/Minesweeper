@@ -103,20 +103,24 @@ public class Minefield {
     /**
      * Shows the tile at the given index.
      * @param index of the tile to show
-     * @return if the tile was successfully shown
+     * @return true if a mine was shown
      */
     public boolean showTile(int index, boolean pressed) {
         Tile tile = tiles[index];
-        if(gameFinished && !tile.isMine())
-            return true;
+        if(gameFinished && pressed)
+            return false;
 
         if(tile.getFlagType() != FlagType.INVALID)
             return false;
 
         if(tile.isShown() && getNearbyMines(index) == getNearbyFlags(index)) {
-            for(Tile _tile : getNearbyTiles(index))
-                if(!_tile.isShown())
-                showTile(_tile.getId(), true);
+            boolean mineRevealed = false;
+            for(Tile _tile : getNearbyTiles(index)) {
+                if (!_tile.isShown())
+                    if(showTile(_tile.getId(), true))
+                        mineRevealed = true;
+            }
+            return true;
         }
         if(getNearbyMines(index) != 0 || tile.isMine()) {
             showSingleTile(tile, pressed);
@@ -300,7 +304,7 @@ public class Minefield {
                 if(plantFlag(tile.getId()))
                     panel.decreaseMines();
                 else {
-                    if(old != FlagType.INVALID && old != FlagType.QUESTION)
+                    if(old != FlagType.INVALID && old != FlagType.QUESTION && !gameFinished)
                         panel.increaseMines();
                 }
             }

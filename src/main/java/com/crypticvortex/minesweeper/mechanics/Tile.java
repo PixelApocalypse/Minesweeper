@@ -70,7 +70,7 @@ public class Tile extends JButton {
      * @return true if the tile is a mine
      */
     public boolean showTile(){
-        if(flagType != FlagType.INVALID)
+        if(flagType != FlagType.INVALID || isShown())
             return false;
         isDiscovered = true;
         return true;
