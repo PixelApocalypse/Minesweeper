@@ -128,40 +128,39 @@ public class Application extends JFrame {
     }
 
     public void createField() {
-        try{
-            counter.stopTimer();
-        } catch(Exception ex){}
-        field = new Minefield(currentDiff, scale);
-        field.populate(false);
-        remove(gameScreen);
+        new Thread(() -> {
+            try {
+                counter.stopTimer();
+            } catch (Exception ex) {
+            }
+            field = new Minefield(currentDiff, scale);
+            field.populate(false);
+            remove(gameScreen);
 
-        screen = new GameScreen(field, counter);
-        gameScreen = new JScrollPane(screen);
-        add(gameScreen, "center");
+            screen = new GameScreen(field, counter);
+            gameScreen = new JScrollPane(screen);
+            add(gameScreen, "center");
 
-        counter.setField(field);
-        counter.resetButton();
-        counter.setDigits();
-        pack();
-        System.out.println("Windows size : " + getSize().width + "x" + getSize().height);
-        Dimension finalDimension = new Dimension();
-        Dimension screenDimension = Toolkit.getDefaultToolkit().getScreenSize();
-        if(getSize().height > screenDimension.height)
-            finalDimension.height = screenDimension.height;
-        else
-            finalDimension.height = getSize().height;
-        if(getSize().width > screenDimension.width)
-            finalDimension.width = screenDimension.width;
-        else
-            finalDimension.width = getSize().width;
-        setSize(finalDimension);
-        System.out.println("Screen size : " + screenDimension.width + "x" + screenDimension.height);
-        System.out.println("Windows size : " + getSize().width + "x" + getSize().height);
-
-        if(currentDiff == Difficulty.EXPERIMENTAL || currentDiff == Difficulty.CUSTOM)
-            setLocationRelativeTo(null);
-        if(currentDiff == Difficulty.EXPERT && field.getScale() == GameScale.TIMES_2)
-            setLocationRelativeTo(null);
+            counter.setField(field);
+            counter.resetButton();
+            counter.setDigits();
+            pack();
+            Dimension finalDimension = new Dimension();
+            Dimension screenDimension = Toolkit.getDefaultToolkit().getScreenSize();
+            if (getSize().height > screenDimension.height)
+                finalDimension.height = screenDimension.height;
+            else
+                finalDimension.height = getSize().height;
+            if (getSize().width > screenDimension.width)
+                finalDimension.width = screenDimension.width;
+            else
+                finalDimension.width = getSize().width;
+            setSize(finalDimension);
+            if (currentDiff == Difficulty.EXPERIMENTAL || currentDiff == Difficulty.CUSTOM)
+                setLocationRelativeTo(null);
+            if (currentDiff == Difficulty.EXPERT && field.getScale() == GameScale.TIMES_2)
+                setLocationRelativeTo(null);
+        }).start();
     }
 
     public static void main(String[] args) {

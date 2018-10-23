@@ -55,12 +55,14 @@ public class Minefield {
         createMines();
         if(!firstRun)
             PanelLoading.show(tiles.length);
-        for(int i = 0; i < width * height; ++i){
+        for(int i = 0; i < width * height; ++i) {
             tiles[i] = new Tile(i, mineCoordinates.contains(i), scale);
-            if(!firstRun)
+            if (!firstRun)
                 PanelLoading.increment(0 /* Generating tiles */);
             System.out.println(i + "/" + tiles.length);
         }
+        PanelLoading.increment(0 /* Generating tiles */);
+        PanelLoading.finish();
     }
 
     /**
