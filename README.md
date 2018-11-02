@@ -7,7 +7,7 @@ Minesweeper is a logic game where mines are hidden in a grid of squares. The obj
 ## Features
 All classic Minesweeper elements:
  - Left Clicking will reveal a large open space or just reveal one tile based on where you clicked.
- - You can place a flag by Right Clicking on any Tile that is not current uncovered.
+ - You can place a flag by Right Clicking on any Tile that is not current uncovered, this will reduce your mine counter by one. Right Clicking again will change it into a Question Mark which will add back the mine the flag had removed. Finally pressing it for a third time removes the Question Mark and returns it to an empty tile.
  - A live game duration display / score counter at the top of the window.
  - A incremental/decremental counter displaying the number of mines left to be marked. This can go below zero and showcases a negative value.
  - A button with a face on it with expressions changing based on what you do; A click will make it panic, clicking a mine will kill it, winning will give it sunglasses, and by default it is just happy.
