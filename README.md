@@ -19,3 +19,4 @@ New features:
  - New "Scale" dropdown menu which allows you to bump up the image size if you struggle seeing the grid in it's default 16x16 px tile format.
  - Flags can have their colors changed by pressing the middle mouse button on a placed flag! This has no real practical application but it took nearly no time to implement and is there if you choose to use it! 
  - Similar to the original but not quite the same; clicking on a number after having marked all the mines will reveal non-mine squares. This feature is not quite 100% finished so use at your own risk.
+ - Our window will semi-intelligently detect the overall size of the grid and if it is too large then making the window take up all the space it can on screen and also add scroll bars vertically and horizontally.
