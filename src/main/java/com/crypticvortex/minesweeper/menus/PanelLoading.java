@@ -1,6 +1,5 @@
 package com.crypticvortex.minesweeper.menus;
 
-import com.sun.jmx.snmp.tasks.Task;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -34,7 +33,7 @@ public class PanelLoading extends JFrame {
 
     private void incrementProgress(int state) { // States: 0 - Generating tiles, 1 - Creating images
         int newValue = progress.getValue() + 1;
-        progressText.setText((state ==0?"Generating tiles ("+(progress.getValue()*100.0f)/tileCount +"%)":"Creating sprites ("+(progress.getValue()*100.0f)/tileCount +"%)"));
+        progressText.setText((state == 0 ? "Generating tiles (" + (progress.getValue() * 100.0f) / tileCount + "%)" : "Creating sprites (" + (progress.getValue() * 100.0f) / tileCount + "%)"));
         progress.setValue(newValue);
     }
 
@@ -55,7 +54,7 @@ public class PanelLoading extends JFrame {
         instance.setLocationRelativeTo(null);
     }
 
-    public static void finish(){
+    public static void finish() {
         instance.setVisible(false);
     }
 

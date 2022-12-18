@@ -11,6 +11,7 @@ public enum GameScale {
     ;
 
     private String scale;
+
     GameScale(String scale) {
         this.scale = scale;
     }

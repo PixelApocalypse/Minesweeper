@@ -1,7 +1,5 @@
 package com.crypticvortex.minesweeper.mechanics;
 
-import javax.swing.*;
-
 import static com.crypticvortex.minesweeper.menus.MenuIcons.*;
 
 /**
@@ -22,6 +20,7 @@ public enum FlagType {
     GRAY(FLAG_GRAY);
 
     private String iconPath;
+
     FlagType(String iconPath) {
         this.iconPath = iconPath;
     }

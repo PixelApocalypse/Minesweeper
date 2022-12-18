@@ -29,7 +29,8 @@ public class Minefield {
 
     /**
      * Create a new minefield with the given parameters:
-     * @param diff the difficulty of the minefield.
+     *
+     * @param diff  the difficulty of the minefield.
      * @param scale the scale of the minefield images.
      */
     public Minefield(Difficulty diff, GameScale scale) {
@@ -40,9 +41,9 @@ public class Minefield {
         this.width = ((diff == Difficulty.CUSTOM) || (diff == Difficulty.EXPERIMENTAL)) ? DifficultyDialog.width : diff.getColumns();
         this.height = ((diff == Difficulty.CUSTOM) || (diff == Difficulty.EXPERIMENTAL)) ? DifficultyDialog.height : diff.getRows();
         this.mineCount = ((diff == Difficulty.CUSTOM) || (diff == Difficulty.EXPERIMENTAL)) ? DifficultyDialog.mines : diff.getMines();
-        if(width < 2) width = 2;
-        if(height < 2) height = 2;
-        if(mineCount < 1) mineCount = 1;
+        if (width < 2) width = 2;
+        if (height < 2) height = 2;
+        if (mineCount < 1) mineCount = 1;
 
         this.tiles = new Tile[width * height];
     }
@@ -53,9 +54,9 @@ public class Minefield {
     public void populate(boolean firstRun) {
         this.mineCoordinates = null;
         createMines();
-        if(!firstRun)
+        if (!firstRun)
             PanelLoading.show(tiles.length);
-        for(int i = 0; i < width * height; ++i) {
+        for (int i = 0; i < width * height; ++i) {
             tiles[i] = new Tile(i, mineCoordinates.contains(i), scale);
             if (!firstRun)
                 PanelLoading.increment(0 /* Generating tiles */);
@@ -67,21 +68,22 @@ public class Minefield {
 
     /**
      * Creates and returns the index of all mines.
+     *
      * @return List of mine coordinates
      */
-    private ArrayList<Integer> createMines(){
+    private ArrayList<Integer> createMines() {
         Random random = new Random(this.seed);
         int nbOfMines;
-        if(diff == Difficulty.EXPERIMENTAL) {
+        if (diff == Difficulty.EXPERIMENTAL) {
             nbOfMines = Math.round(tiles.length * ((float) (DifficultyDialog.mines) / 100));
         } else
             nbOfMines = mineCount;
-        if(nbOfMines < 1)
+        if (nbOfMines < 1)
             nbOfMines = 1;
         mineCount = nbOfMines;
 
         ArrayList<Integer> minesCoordinate = new ArrayList<>(nbOfMines);
-        for(int i = 0; i < nbOfMines; i++) {
+        for (int i = 0; i < nbOfMines; i++) {
             int mineLocation = random.nextInt(tiles.length);
             if (minesCoordinate.contains(mineLocation)) {
                 i--;
@@ -95,36 +97,38 @@ public class Minefield {
 
     /**
      * Returns the tile at the given index.
+     *
      * @param index of the mine to return
      * @return copy of the tile at the given index.
      */
-    public Tile getTile(int index){
+    public Tile getTile(int index) {
         return tiles[index];
     }
 
     /**
      * Shows the tile at the given index.
+     *
      * @param index of the tile to show
      * @return true if a mine was shown
      */
     public boolean showTile(int index, boolean pressed) {
         Tile tile = tiles[index];
-        if(gameFinished && pressed)
+        if (gameFinished && pressed)
             return false;
 
-        if(tile.getFlagType() != FlagType.INVALID)
+        if (tile.getFlagType() != FlagType.INVALID)
             return false;
 
-        if(tile.isShown() && getNearbyMines(index) == getNearbyFlags(index)) {
+        if (tile.isShown() && getNearbyMines(index) == getNearbyFlags(index)) {
             boolean mineRevealed = false;
-            for(Tile _tile : getNearbyTiles(index)) {
+            for (Tile _tile : getNearbyTiles(index)) {
                 if (!_tile.isShown())
-                    if(showTile(_tile.getId(), true))
+                    if (showTile(_tile.getId(), true))
                         mineRevealed = true;
             }
             return true;
         }
-        if(getNearbyMines(index) != 0 || tile.isMine()) {
+        if (getNearbyMines(index) != 0 || tile.isMine()) {
             showSingleTile(tile, pressed);
             return tile.isMine();
         } else
@@ -133,10 +137,10 @@ public class Minefield {
         return false;
     }
 
-    private void showSingleTile(Tile tile, boolean pressed){
-        if(tile.showTile()) {
-            if(tile.isMine()) {
-                if(pressed)
+    private void showSingleTile(Tile tile, boolean pressed) {
+        if (tile.showTile()) {
+            if (tile.isMine()) {
+                if (pressed)
                     tile.setIcon(MenuIcons.getScaledIcon(scale, MenuIcons.MINE_PRESSED));
                 else
                     tile.setIcon(MenuIcons.getScaledIcon(scale, MenuIcons.MINE));
@@ -148,44 +152,45 @@ public class Minefield {
         }
     }
 
-    private void showMultipleTiles(Tile source){
+    private void showMultipleTiles(Tile source) {
         ArrayList<Tile> tilesToReveal = new ArrayList<>();
         tilesToReveal.add(source);
         ArrayList<Tile> tilesToCheck = new ArrayList<>();
         tilesToCheck.add(source);
 
-        for(int i = 0; i < tilesToCheck.size(); i++){
-            for(Tile tile : getNearbyTiles(tilesToCheck.get(i).getId())){
-                if(tilesToReveal.contains(tile))
+        for (int i = 0; i < tilesToCheck.size(); i++) {
+            for (Tile tile : getNearbyTiles(tilesToCheck.get(i).getId())) {
+                if (tilesToReveal.contains(tile))
                     continue;
                 tilesToReveal.add(tile);
-                if(getNearbyMines(tile.getId()) == 0)
+                if (getNearbyMines(tile.getId()) == 0)
                     tilesToCheck.add(tile);
             }
         }
 
-        for(Tile tile : tilesToReveal)
+        for (Tile tile : tilesToReveal)
             showSingleTile(tile, true);
     }
 
     /**
      * Gets and returns the amount of mines around the tile at the given index.
+     *
      * @param index of the tile around which to look
      * @return number of nearby mines
      */
-    public int getNearbyMines(int index){
+    public int getNearbyMines(int index) {
         int nearbyMines = 0;
-        for(Tile tile : getNearbyTiles(index)){
-            if(tile.isMine())
+        for (Tile tile : getNearbyTiles(index)) {
+            if (tile.isMine())
                 nearbyMines++;
         }
         return nearbyMines;
     }
 
-    public int getNearbyFlags(int index){
+    public int getNearbyFlags(int index) {
         int nearbyFlags = 0;
-        for(Tile tile : getNearbyTiles(index)){
-            if(tile.getFlagType() != FlagType.INVALID)
+        for (Tile tile : getNearbyTiles(index)) {
+            if (tile.getFlagType() != FlagType.INVALID)
                 ++nearbyFlags;
         }
         return nearbyFlags;
@@ -193,10 +198,11 @@ public class Minefield {
 
     /**
      * Verifies if the game is won.
+     *
      * @return is the game finished
      */
-    public boolean gameWon(){
-        for(int i = 0; i < tiles.length; ++i) {
+    public boolean gameWon() {
+        for (int i = 0; i < tiles.length; ++i) {
             if (!tiles[i].isShown() && !tiles[i].isMine())
                 return false;
         }
@@ -206,6 +212,7 @@ public class Minefield {
 
     /**
      * Gets and returns all tiles around the tile at the given index.
+     *
      * @param index index of the tile to look around
      * @return all tiles around the given tile
      */
@@ -236,11 +243,11 @@ public class Minefield {
     }
 
     public boolean plantFlag(int index) {
-        if(gameFinished)
+        if (gameFinished)
             return false;
 
         Tile tile = tiles[index];
-        if(!tile.isShown()) {
+        if (!tile.isShown()) {
             if (tile.getFlagType() == FlagType.INVALID) {
                 tile.setFlagType(FlagType.RED);
                 return true;
@@ -257,14 +264,15 @@ public class Minefield {
 
     /**
      * Registers the mouse listener for each Tile.
+     *
      * @param index Coordinate of target tile.
      */
-    public void createTileMouseListener(int index){
+    public void createTileMouseListener(int index) {
         tiles[index].addMouseListener(new TileMouseListener(Application.counter));
     }
 
-    public void cycleTileFlagColor(int index){
-        if(gameFinished)
+    public void cycleTileFlagColor(int index) {
+        if (gameFinished)
             return;
         tiles[index].cycleColor();
     }
@@ -295,6 +303,7 @@ public class Minefield {
 
     private class TileMouseListener implements MouseListener {
         private CounterPanel panel;
+
         public TileMouseListener(CounterPanel panel) {
             this.panel = panel;
         }
@@ -303,10 +312,10 @@ public class Minefield {
             Tile tile = (Tile) e.getSource();
             if (e.getButton() == MouseEvent.BUTTON3) {
                 FlagType old = tile.getFlagType();
-                if(plantFlag(tile.getId()))
+                if (plantFlag(tile.getId()))
                     panel.decreaseMines();
                 else {
-                    if(old != FlagType.INVALID && old != FlagType.QUESTION && !gameFinished)
+                    if (old != FlagType.INVALID && old != FlagType.QUESTION && !gameFinished)
                         panel.increaseMines();
                 }
             }
@@ -314,10 +323,21 @@ public class Minefield {
                 cycleTileFlagColor(tile.getId());
         }
 
-        @Override public void mouseClicked(MouseEvent e) {}
-        @Override public void mouseReleased(MouseEvent e) {}
-        @Override public void mouseEntered(MouseEvent e) {}
-        @Override public void mouseExited(MouseEvent e) {}
+        @Override
+        public void mouseClicked(MouseEvent e) {
+        }
+
+        @Override
+        public void mouseReleased(MouseEvent e) {
+        }
+
+        @Override
+        public void mouseEntered(MouseEvent e) {
+        }
+
+        @Override
+        public void mouseExited(MouseEvent e) {
+        }
     }
 
 }

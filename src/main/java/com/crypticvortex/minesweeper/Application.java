@@ -36,7 +36,8 @@ public class Application extends JFrame {
 
         try {
             setIconImage(new ImageIcon(Application.class.getResource("/images/favicon.png")).getImage());
-        } catch (Exception ex) {}
+        } catch (Exception ex) {
+        }
 
         scale = GameScale.DEFAULT;
         field = new Minefield(Difficulty.BEGINNER, scale);
@@ -166,11 +167,13 @@ public class Application extends JFrame {
     public static void main(String[] args) {
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        } catch (Exception ex) {}
+        } catch (Exception ex) {
+        }
 
         Application app = new Application();
         app.setVisible(true);
-        app.requestFocus();;
+        app.requestFocus();
+        ;
     }
 
     private class DifficultyListener implements ChangeListener {
@@ -183,15 +186,15 @@ public class Application extends JFrame {
         }
 
         public void stateChanged(ChangeEvent e) {
-            if(e.getSource() == item1 && item1.isSelected()) {
+            if (e.getSource() == item1 && item1.isSelected()) {
                 item2.setSelected(false);
                 item3.setSelected(false);
                 currentDiff = Difficulty.BEGINNER;
-            } else if(e.getSource() == item2 && item2.isSelected()) {
+            } else if (e.getSource() == item2 && item2.isSelected()) {
                 item1.setSelected(false);
                 item3.setSelected(false);
                 currentDiff = Difficulty.INTERMEDIATE;
-            } else if(e.getSource() == item3 && item3.isSelected()) {
+            } else if (e.getSource() == item3 && item3.isSelected()) {
                 item1.setSelected(false);
                 item2.setSelected(false);
                 currentDiff = Difficulty.EXPERT;
@@ -208,10 +211,10 @@ public class Application extends JFrame {
         }
 
         public void stateChanged(ChangeEvent e) {
-            if(e.getSource() == item1 && item1.isSelected()) {
+            if (e.getSource() == item1 && item1.isSelected()) {
                 item2.setSelected(false);
                 scale = GameScale.DEFAULT;
-            } else if(e.getSource() == item2 && item2.isSelected()) {
+            } else if (e.getSource() == item2 && item2.isSelected()) {
                 item1.setSelected(false);
                 scale = GameScale.TIMES_2;
             }

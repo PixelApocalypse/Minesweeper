@@ -20,7 +20,7 @@ public class DifficultyDialog extends JFrame {
 
     public DifficultyDialog(Difficulty diff) {
         // Same class for two separate layouts.
-        if(diff == Difficulty.CUSTOM) {
+        if (diff == Difficulty.CUSTOM) {
             setTitle("Custom");
             setLayout(new MigLayout());
 
@@ -33,7 +33,9 @@ public class DifficultyDialog extends JFrame {
             _height.setInputVerifier(verifier);
             _height.setToolTipText("Minimum: " + min_height);
             _height.addFocusListener(new FocusListener() {
-                public void focusGained(FocusEvent e) {}
+                public void focusGained(FocusEvent e) {
+                }
+
                 public void focusLost(FocusEvent e) {
                     height = Integer.parseInt(_height.getText());
                 }
@@ -47,7 +49,9 @@ public class DifficultyDialog extends JFrame {
             _width.setInputVerifier(verifier);
             _width.setToolTipText("Minimum: " + min_width);
             _width.addFocusListener(new FocusListener() {
-                public void focusGained(FocusEvent e) {}
+                public void focusGained(FocusEvent e) {
+                }
+
                 public void focusLost(FocusEvent e) {
                     width = Integer.parseInt(_width.getText());
                 }
@@ -61,7 +65,9 @@ public class DifficultyDialog extends JFrame {
             _mines.setInputVerifier(verifier);
             _mines.setToolTipText("Minimum: " + min_mines);
             _mines.addFocusListener(new FocusListener() {
-                public void focusGained(FocusEvent e) {}
+                public void focusGained(FocusEvent e) {
+                }
+
                 public void focusLost(FocusEvent e) {
                     mines = Integer.parseInt(_mines.getText());
                 }
@@ -78,7 +84,7 @@ public class DifficultyDialog extends JFrame {
             });
             add(create);
             pack();
-        } else if(diff == Difficulty.EXPERIMENTAL) {
+        } else if (diff == Difficulty.EXPERIMENTAL) {
             setTitle("Experimental");
             setLayout(new MigLayout());
 
@@ -94,7 +100,9 @@ public class DifficultyDialog extends JFrame {
             _height = new JTextField("" + height);
             _height.setInputVerifier(verifier);
             _height.addFocusListener(new FocusListener() {
-                public void focusGained(FocusEvent e) {}
+                public void focusGained(FocusEvent e) {
+                }
+
                 public void focusLost(FocusEvent e) {
                     height = Integer.parseInt(_height.getText());
                 }
@@ -109,7 +117,9 @@ public class DifficultyDialog extends JFrame {
             _width.setInputVerifier(verifier);
             _width.setToolTipText("Minimum: " + min_width);
             _width.addFocusListener(new FocusListener() {
-                public void focusGained(FocusEvent e) {}
+                public void focusGained(FocusEvent e) {
+                }
+
                 public void focusLost(FocusEvent e) {
                     width = Integer.parseInt(_width.getText());
                 }
@@ -122,7 +132,9 @@ public class DifficultyDialog extends JFrame {
             _mines_percent = new JTextField("10");
             _mines_percent.setInputVerifier(verifier);
             _mines_percent.addFocusListener(new FocusListener() {
-                public void focusGained(FocusEvent e) {}
+                public void focusGained(FocusEvent e) {
+                }
+
                 public void focusLost(FocusEvent e) {
                     mines = Integer.parseInt(_mines_percent.getText());
                 }
@@ -152,22 +164,22 @@ public class DifficultyDialog extends JFrame {
         private Border red = BorderFactory.createLineBorder(Color.red);
 
         protected boolean checkField(JComponent input) {
-            if(input == _width) {
+            if (input == _width) {
                 boolean ret = Integer.parseInt(_width.getText()) >= min_width;
-                if(!ret) input.setBorder(red);
+                if (!ret) input.setBorder(red);
                 else input.setBorder(gray);
                 return ret;
-            } else if(input == _height) {
+            } else if (input == _height) {
                 boolean ret = Integer.parseInt(_height.getText()) >= min_height;
-                if(!ret) input.setBorder(red);
+                if (!ret) input.setBorder(red);
                 else input.setBorder(gray);
                 return ret;
-            } else if(input == _mines) {
+            } else if (input == _mines) {
                 boolean ret = Integer.parseInt(_mines.getText()) >= min_mines;
-                if(!ret) input.setBorder(red);
+                if (!ret) input.setBorder(red);
                 else input.setBorder(gray);
                 return ret;
-            } else if(input == _mines_percent) {
+            } else if (input == _mines_percent) {
                 return true;
             }
             return true;

@@ -33,20 +33,20 @@ public class GameScreen extends JPanel {
         setSize(size + 10, size + 10);
 
         int tileWidth = 16, tileHeight = 16;
-        switch(field.getScale()) {
+        switch (field.getScale()) {
             case TIMES_2:
                 tileWidth *= 2;
                 tileHeight *= 2;
                 break;
         }
-        for(int y = 0; y < field.getHeight(); y++) {
+        for (int y = 0; y < field.getHeight(); y++) {
             for (int x = 0; x < field.getWidth(); x++) {
                 int index = field.getWidth() * y + x;
                 Tile tile = field.getTile(index);
                 tile.addActionListener(new TileClickListener());
                 field.createTileMouseListener(index);
                 tile.setSize(tileWidth, tileHeight);
-                if(x == field.getWidth() - 1)
+                if (x == field.getWidth() - 1)
                     add(tile, "wrap");
                 else
                     add(tile);
@@ -56,12 +56,12 @@ public class GameScreen extends JPanel {
 
     private class TileClickListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-            if(!counter.isTimerCounting() && !isGameFinished)
+            if (!counter.isTimerCounting() && !isGameFinished)
                 counter.startTimer();
             Tile tile = (Tile) e.getSource();
             boolean minePressed = field.showTile(tile.getId(), true);
             counter.updateFace(0);
-            if(!isGameFinished) {
+            if (!isGameFinished) {
                 if (!minePressed) {
                     if (field.gameWon()) {
                         counter.stopTimer();
