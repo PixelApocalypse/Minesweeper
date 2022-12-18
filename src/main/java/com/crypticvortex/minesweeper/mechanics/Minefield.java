@@ -120,13 +120,11 @@ public class Minefield {
             return false;
 
         if (tile.isShown() && getNearbyMines(index) == getNearbyFlags(index)) {
-            boolean mineRevealed = false;
             for (Tile _tile : getNearbyTiles(index)) {
-                if (!_tile.isShown())
-                    if (showTile(_tile.getId(), true))
-                        mineRevealed = true;
+                if (!_tile.isShown() && !_tile.isMine())
+                    showTile(_tile.getId(), true);
             }
-            return true;
+            return false;
         }
         if (getNearbyMines(index) != 0 || tile.isMine()) {
             showSingleTile(tile, pressed);
